@@ -14,6 +14,7 @@ class DoctorDB {
     lateinit var mGetDoctorByIdSuccessListener: GetDoctorByIdSuccessListener
     lateinit var mGetDoctorByIdFailureListener: GetDoctorByIdFailureListener
 
+
     //functions
     fun getDoctorByID(id: String)
     {
@@ -42,7 +43,6 @@ class DoctorDB {
     }
 
 
-
     //interfaces
     interface GetDoctorByIdSuccessListener
     {
@@ -53,6 +53,7 @@ class DoctorDB {
     {
         fun getDoctorByIDFailure()
     }
+
 
     //interface setters
     fun setGetDoctorByIDSuccessListener(int: GetDoctorByIdSuccessListener)

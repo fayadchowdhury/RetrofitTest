@@ -20,37 +20,37 @@ class Doctor
     {
         val doctor = Doctor()
 
-        if ( res.has("id"))
+        if ( !res.isNull("id") )
             doctor.id = res.get("id").toString()
 
-        if ( res.has("name"))
+        if ( !res.isNull("name"))
             doctor.name = res.get("name").toString()
 
-        if ( res.has("email"))
+        if ( !res.isNull("email"))
             doctor.email = res.get("email").toString()
 
-        if ( res.has("pass"))
+        if ( !res.isNull("pass"))
             doctor.pass = res.get("pass").toString()
 
-        if ( res.has("phone"))
+        if ( !res.isNull("phone"))
             doctor.phone = res.get("phone").toString()
 
-        if ( res.has("dob"))
+        if ( !res.isNull("dob"))
             doctor.dob = res.get("dob").toString()
 
-        if ( res.has("gender"))
+        if ( !res.isNull("gender"))
             doctor.gender = res.get("gender").toString()
 
-        if ( res.has("blood"))
+        if ( !res.isNull("blood"))
             doctor.blood = res.get("blood").toString()
 
-        if ( res.has("address"))
+        if ( !res.isNull("address"))
             doctor.address = res.get("address").toString()
 
-        if ( res.has("specialty"))
+        if ( !res.isNull("specialty"))
             doctor.specialty = res.get("specialty").toString()
 
-        if ( res.has("bmdc"))
+        if ( !res.isNull("bmdc"))
             doctor.bmdc = res.get("bmdc").toString()
 
         return doctor

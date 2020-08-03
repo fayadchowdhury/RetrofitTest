@@ -19,34 +19,34 @@ class Patient
     {
         val patient = Patient()
 
-        if ( res.has("id"))
+        if ( !res.isNull("id"))
             patient.id = res.get("id").toString()
 
-        if ( res.has("name"))
+        if ( !res.isNull("name"))
             patient.name = res.get("name").toString()
 
-        if ( res.has("email"))
+        if ( !res.isNull("email"))
             patient.email = res.get("email").toString()
 
-        if ( res.has("pass"))
+        if ( !res.isNull("pass"))
             patient.pass = res.get("pass").toString()
 
-        if ( res.has("phone"))
+        if ( !res.isNull("phone"))
             patient.phone = res.get("phone").toString()
 
-        if ( res.has("dob"))
+        if ( !res.isNull("dob"))
             patient.dob = res.get("dob").toString()
 
-        if ( res.has("gender"))
+        if ( !res.isNull("gender"))
             patient.gender = res.get("gender").toString()
 
-        if ( res.has("blood"))
+        if ( !res.isNull("blood"))
             patient.blood = res.get("blood").toString()
 
-        if ( res.has("address"))
+        if ( !res.isNull("address"))
             patient.address = res.get("address").toString()
 
-        if ( res.has("past"))
+        if ( !res.isNull("past"))
             patient.past = res.get("past").toString()
 
         return patient

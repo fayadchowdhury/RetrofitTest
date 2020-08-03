@@ -23,10 +23,11 @@ class MainActivity : AppCompatActivity(), DoctorDB.GetDoctorByIdSuccessListener,
         ddb.setGetDoctorByIDFailureListener(this)
 
 
-        ddb.getDoctorByID("ec735618-0935-4bc7-b83d-edaf2972bc64")
+        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
     }
 
     override fun getDoctorByIDSuccess(doctor: Doctor) {
+        Log.d("Retro Within Main", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
     }
 

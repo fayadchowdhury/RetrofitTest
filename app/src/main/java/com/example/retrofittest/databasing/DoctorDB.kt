@@ -2,6 +2,7 @@ package com.example.retrofittest.databasing
 
 import com.example.retrofittest.MainActivity
 import com.example.retrofittest.models.Doctor
+import com.example.retrofittest.models.Rating
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -20,8 +21,19 @@ class DoctorDB {
     lateinit var mGetDoctorsSuccessListener: GetDoctorsSuccessListener
     lateinit var mGetDoctorsFailureListener: GetDoctorsFailureListener
 
+    //Find Top Doctors
+    lateinit var mGetTopDoctorsSuccessListener: GetTopDoctorsSuccessListener
+    lateinit var mGetTopDoctorsFailureListener: GetTopDoctorsFailureListener
+
+
+
+    //Find Top Doctors InAllCategories
+    lateinit var mGetTopDoctorsInAllCategoriesSuccessListener: GetTopDoctorsInAllCategoriesSuccessListener
+    lateinit var mGetTopDoctorsInAllCategoriesFailureListener: GetTopDoctorsInAllCategoriesFailureListener
+
 
     //functions
+
     //Find Doctor By Id
     fun getDoctorByID(id: String)
     {
@@ -218,8 +230,97 @@ class DoctorDB {
         })
     }
 
-    //interfaces
+    //Find top Doctors in particular speciality
+    fun getTopDoctors(specialty: String, limit: Int)
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put("specialty", specialty)
+        paramsJSON.put("limit", limit)
 
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+        val call = APIObject.api.getTopDoctors(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val message = "Failed to retrieve from database"
+                mGetDoctorsFailureListener.getDoctorsFailure(message)
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val doctors = jsonRes.getJSONArray("users")
+
+                    if(doctors.length() != 0) {
+                        for (i in 0 until doctors.length()) {
+                            val doctorJsonObject = doctors.getJSONObject(i)
+                            val ratingJsonObject = doctorJsonObject.getJSONObject("rating")
+                            val rating = Rating().fromJSON(ratingJsonObject)
+                            val doctor = Doctor().fromJSON(doctorJsonObject)
+                            mGetTopDoctorsSuccessListener.getTopDoctorsSuccess(doctor, rating)
+                        }
+                    }
+                    else{
+                        val message = "No doctor found"
+                        mGetTopDoctorsFailureListener.getTopDoctorsFailure(message)
+                    }
+                }
+                else{
+                    val message = "Failed to retrieve response as success"
+                    mGetTopDoctorsFailureListener.getTopDoctorsFailure(message)
+                }
+
+            }
+        })
+    }
+
+    //Find top Doctors in all Categories
+    fun getTopDoctorsInAllCategories()
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put(null, null)
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+        val call = APIObject.api.getTopDoctorsInAllCategories(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val message = "Failed to retrieve from database"
+                mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val doctors = jsonRes.getJSONArray("users")
+
+                    if(doctors.length() != 0) {
+                        for (i in 0 until doctors.length()) {
+                            val doctorJsonObject = doctors.getJSONObject(i)
+                            val ratingJsonObject = doctorJsonObject.getJSONObject("rating")
+                            val rating = Rating().fromJSON(ratingJsonObject)
+                            val doctor = Doctor().fromJSON(doctorJsonObject)
+                            mGetTopDoctorsInAllCategoriesSuccessListener.getTopDoctorsInAllCategoriesSuccess(doctor, rating)
+                        }
+                    }
+                    else{
+                        val message = "No doctor found"
+                        mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+                    }
+                }
+                else{
+                    val message = "Failed to retrieve response as success"
+                    mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+                }
+
+            }
+        })
+    }
+
+    //interfaces
     //Find Doctor By Id
     interface GetDoctorByIdSuccessListener
     {
@@ -240,6 +341,28 @@ class DoctorDB {
     interface GetDoctorsFailureListener
     {
         fun getDoctorsFailure(message: String)
+    }
+
+    //Find Top Doctors
+    interface GetTopDoctorsSuccessListener
+    {
+        fun getTopDoctorsSuccess(doctor: Doctor, rating: Rating)
+    }
+
+    interface GetTopDoctorsFailureListener
+    {
+        fun getTopDoctorsFailure(message: String)
+    }
+
+    //Find Top Doctors
+    interface GetTopDoctorsInAllCategoriesSuccessListener
+    {
+        fun getTopDoctorsInAllCategoriesSuccess(doctor: Doctor, rating: Rating)
+    }
+
+    interface GetTopDoctorsInAllCategoriesFailureListener
+    {
+        fun getTopDoctorsInAllCategoriesFailure(message: String)
     }
 
 
@@ -265,5 +388,27 @@ class DoctorDB {
     fun setGetDoctorsFailureListener(int: MainActivity)
     {
         this.mGetDoctorsFailureListener = int
+    }
+
+    //Find top doctors
+    fun setGetTopDoctorsSuccessListener(int: MainActivity)
+    {
+        this.mGetTopDoctorsSuccessListener = int
+    }
+
+    fun setGetTopDoctorsFailureListener(int: MainActivity)
+    {
+        this.mGetTopDoctorsFailureListener = int
+    }
+
+    //Find top doctors in all categories
+    fun setGetTopDoctorsInAllCategoriesSuccessListener(int: MainActivity)
+    {
+        this.mGetTopDoctorsInAllCategoriesSuccessListener = int
+    }
+
+    fun setGetTopDoctorsInAllCategoriesFailureListener(int: MainActivity)
+    {
+        this.mGetTopDoctorsInAllCategoriesFailureListener = int
     }
 }

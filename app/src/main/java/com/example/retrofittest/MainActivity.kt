@@ -49,10 +49,16 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //Find Doctors
         ddb.setGetDoctorsSuccessListener(this)
         ddb.setGetDoctorsFailureListener(this)
+        //With email and limit
         ddb.getDoctors(1, "hakimrahman@gmail.com")
+        //Only with limit
         ddb.getDoctors(1)
+        //Only With email
         ddb.getDoctors( "rh@gmail.com")
+        //In general
         ddb.getDoctors()
+        //Wrong email
+        ddb.getDoctors("naafiz@gmail.com")
 
 
     }

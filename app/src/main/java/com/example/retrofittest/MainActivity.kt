@@ -7,10 +7,15 @@ import android.widget.TextView
 import com.example.retrofittest.databasing.AuthDB
 import com.example.retrofittest.databasing.DoctorDB
 import com.example.retrofittest.models.Doctor
+import com.example.retrofittest.models.Rating
 
 class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
     DoctorDB.GetDoctorsSuccessListener,
-    DoctorDB.GetDoctorsFailureListener  /* AuthDB interfaces AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener */{
+    DoctorDB.GetDoctorsFailureListener,
+    DoctorDB.GetTopDoctorsSuccessListener,
+    DoctorDB.GetTopDoctorsFailureListener,
+    DoctorDB.GetTopDoctorsInAllCategoriesSuccessListener,
+    DoctorDB.GetTopDoctorsInAllCategoriesFailureListener  /* AuthDB interfaces AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener */{
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -39,14 +44,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         ddb = DoctorDB()
 
-        //Find Doctor By Id
-        /*
+        /*****Find Doctor By Id******/
         ddb.setGetDoctorByIDSuccessListener(this)
         ddb.setGetDoctorByIDFailureListener(this)
         ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
-         */
 
-        //Find Doctors
+        /********Find Doctors*******/
         ddb.setGetDoctorsSuccessListener(this)
         ddb.setGetDoctorsFailureListener(this)
         //With email and limit
@@ -60,27 +63,61 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //Wrong email
         ddb.getDoctors("naafiz@gmail.com")
 
+        /****Find Top Doctors in a particular speciality*****/
+        ddb.setGetTopDoctorsSuccessListener(this)
+        ddb.setGetTopDoctorsFailureListener(this)
+        ddb.getTopDoctors("ENT", 2)
+
+        /****Find Top Doctors in general****/
+        ddb.setGetTopDoctorsInAllCategoriesSuccessListener(this)
+        ddb.setGetTopDoctorsInAllCategoriesFailureListener(this)
+        //Without limit
+        ddb.getTopDoctorsInAllCategories()
+        //With Limit
+        ddb.getTopDoctorsInAllCategories(1)
+
+
 
     }
 
     //Find Doctor By Id
     override fun getDoctorByIDSuccess(doctor: Doctor) {
-        Log.d("Retro Within Main", "Doctor name: ${doctor.name}")
+        Log.d("Doc by id", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
     }
 
     override fun getDoctorByIDFailure() {
-        Log.d("oopsie", "Failure")
+        Log.d("oopsie by id", "Failure")
     }
 
     //Find Doctors
     override fun getDoctorsSuccess(doctor: Doctor) {
-        Log.d("Retro Within Mainnn", "Doctor name: ${doctor.name}")
+        Log.d("Doctors general", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
     }
 
     override fun getDoctorsFailure(message: String) {
-        Log.d("oopsie", message)
+        Log.d("oopsie docs general", message)
+    }
+
+    //Find top doctors
+    override fun getTopDoctorsSuccess(doctor: Doctor, rating: Rating) {
+        Log.d("TopDocs Within Mainnn", "Doctor name: ${doctor.name} Rating: ${rating.average}")
+        tv.text = doctor.name + " " + rating.average
+    }
+
+    override fun getTopDoctorsFailure(message: String) {
+        Log.d("oopsie top docs", message)
+    }
+
+    //Find Top Doctors in all Categories
+    override fun getTopDoctorsInAllCategoriesSuccess(doctor: Doctor, rating: Rating) {
+        Log.d("TopDocs all Within Main", "Doctor name: ${doctor.name} Rating: ${rating.average}")
+        tv.text = doctor.name + " " + rating.average
+    }
+
+    override fun getTopDoctorsInAllCategoriesFailure(message: String) {
+        Log.d("oopsie top docs all", message)
     }
 
     /*AuthDB usage

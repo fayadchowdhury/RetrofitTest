@@ -2,11 +2,15 @@ package com.example.retrofittest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import com.example.retrofittest.databasing.AuthDB
 import com.example.retrofittest.databasing.DoctorDB
+import com.example.retrofittest.models.Doctor
 
-class MainActivity : AppCompatActivity() /* DoctorDB interfaces DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener */ /* AuthDB interfaces AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener */{
+class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
+    DoctorDB.GetDoctorsSuccessListener,
+    DoctorDB.GetDoctorsFailureListener  /* AuthDB interfaces AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener */{
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -32,16 +36,28 @@ class MainActivity : AppCompatActivity() /* DoctorDB interfaces DoctorDB.GetDoct
         adb.registerPatientBasic("Dr. Zayad Chowdhury", "zayad.chowdhury@gmail.com", "zipto123")
         adb.loginPatient("zayad.chowdhury@gmail.com", "zipto123")*/
 
-        /*DoctorDB usage
+
         ddb = DoctorDB()
+
+        //Find Doctor By Id
+        /*
         ddb.setGetDoctorByIDSuccessListener(this)
         ddb.setGetDoctorByIDFailureListener(this)
+        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
+         */
+
+        //Find Doctors
+        ddb.setGetDoctorsSuccessListener(this)
+        ddb.setGetDoctorsFailureListener(this)
+        ddb.getDoctors(1, "hakimrahman@gmail.com")
+        ddb.getDoctors(1)
+        ddb.getDoctors( "rh@gmail.com")
+        ddb.getDoctors()
 
 
-        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")*/
     }
 
-    /*DoctorDB usage
+    //Find Doctor By Id
     override fun getDoctorByIDSuccess(doctor: Doctor) {
         Log.d("Retro Within Main", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
@@ -49,7 +65,17 @@ class MainActivity : AppCompatActivity() /* DoctorDB interfaces DoctorDB.GetDoct
 
     override fun getDoctorByIDFailure() {
         Log.d("oopsie", "Failure")
-    }*/
+    }
+
+    //Find Doctors
+    override fun getDoctorsSuccess(doctor: Doctor) {
+        Log.d("Retro Within Mainnn", "Doctor name: ${doctor.name}")
+        tv.text = doctor.name + " " + doctor.email
+    }
+
+    override fun getDoctorsFailure(message: String) {
+        Log.d("oopsie", message)
+    }
 
     /*AuthDB usage
     override fun registerDoctorBasicSuccess(doctor: Doctor) {

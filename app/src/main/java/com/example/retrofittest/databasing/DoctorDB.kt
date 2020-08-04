@@ -34,7 +34,7 @@ class DoctorDB {
 
     //functions
 
-    //Find Doctor By Id
+    /*******Find Doctor By Id ********/
     fun getDoctorByID(id: String)
     {
         val paramsJSON = JSONObject()
@@ -61,7 +61,7 @@ class DoctorDB {
         })
     }
 
-    //Find the Doctors in general with email and limit
+    /*******Find the Doctors in general with email and limit******/
     fun getDoctors(limit: Int, email: String)
     {
         val paramsJSON = JSONObject()
@@ -104,7 +104,7 @@ class DoctorDB {
         })
     }
 
-    //Find the Doctors in general with limit
+    /********Find the Doctors in general with limit********/
     fun getDoctors(limit: Int)
     {
         val paramsJSON = JSONObject()
@@ -146,7 +146,7 @@ class DoctorDB {
         })
     }
 
-    //Find the Doctors in general with email
+    /********Find the Doctors in general with email*******/
     fun getDoctors(email: String)
     {
         val paramsJSON = JSONObject()
@@ -188,7 +188,7 @@ class DoctorDB {
         })
     }
 
-    //Find the Doctors in general
+    /**********Find the Doctors in general*********/
     fun getDoctors()
     {
         val paramsJSON = JSONObject()
@@ -230,7 +230,7 @@ class DoctorDB {
         })
     }
 
-    //Find top Doctors in particular speciality
+    /************Find top Doctors in particular specialty********/
     fun getTopDoctors(specialty: String, limit: Int)
     {
         val paramsJSON = JSONObject()
@@ -276,7 +276,7 @@ class DoctorDB {
         })
     }
 
-    //Find top Doctors in all Categories
+    /**********Find top Doctors in all Categories without limit********/
     fun getTopDoctorsInAllCategories()
     {
         val paramsJSON = JSONObject()
@@ -320,7 +320,51 @@ class DoctorDB {
         })
     }
 
-    //interfaces
+    /*********Find top Doctors in all Categories with limit********/
+    fun getTopDoctorsInAllCategories(limit: Int)
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put("limit", limit)
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+        val call = APIObject.api.getTopDoctorsInAllCategories(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val message = "Failed to retrieve from database"
+                mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val doctors = jsonRes.getJSONArray("users")
+
+                    if(doctors.length() != 0) {
+                        for (i in 0 until doctors.length()) {
+                            val doctorJsonObject = doctors.getJSONObject(i)
+                            val ratingJsonObject = doctorJsonObject.getJSONObject("rating")
+                            val rating = Rating().fromJSON(ratingJsonObject)
+                            val doctor = Doctor().fromJSON(doctorJsonObject)
+                            mGetTopDoctorsInAllCategoriesSuccessListener.getTopDoctorsInAllCategoriesSuccess(doctor, rating)
+                        }
+                    }
+                    else{
+                        val message = "No doctor found"
+                        mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+                    }
+                }
+                else{
+                    val message = "Failed to retrieve response as success"
+                    mGetTopDoctorsInAllCategoriesFailureListener.getTopDoctorsInAllCategoriesFailure(message)
+                }
+
+            }
+        })
+    }
+
+    /***************interfaces**************/
     //Find Doctor By Id
     interface GetDoctorByIdSuccessListener
     {
@@ -354,7 +398,7 @@ class DoctorDB {
         fun getTopDoctorsFailure(message: String)
     }
 
-    //Find Top Doctors
+    //Find Top Doctors in particular specialty
     interface GetTopDoctorsInAllCategoriesSuccessListener
     {
         fun getTopDoctorsInAllCategoriesSuccess(doctor: Doctor, rating: Rating)
@@ -366,7 +410,7 @@ class DoctorDB {
     }
 
 
-    //interface setters
+    /***************interface setters************/
 
     //Find Doctor By Id
     fun setGetDoctorByIDSuccessListener(int: MainActivity)
@@ -390,7 +434,7 @@ class DoctorDB {
         this.mGetDoctorsFailureListener = int
     }
 
-    //Find top doctors
+    //Find top doctors in particular specialty
     fun setGetTopDoctorsSuccessListener(int: MainActivity)
     {
         this.mGetTopDoctorsSuccessListener = int

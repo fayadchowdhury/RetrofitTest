@@ -5,9 +5,6 @@ import org.json.JSONObject
 class Rating
 {
     lateinit var doctorId: String
-    /*var numRatings: Double? = 0.0
-    var sumRatings: Double? = 0.0
-    var average: Double? = 0.0*/
     lateinit var numRatings: String
     lateinit var sumRatings: String
     lateinit var average: String

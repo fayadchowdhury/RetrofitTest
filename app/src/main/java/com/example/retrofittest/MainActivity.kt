@@ -44,14 +44,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         ddb = DoctorDB()
 
-        //Find Doctor By Id
-        /*
+        /*****Find Doctor By Id******/
         ddb.setGetDoctorByIDSuccessListener(this)
         ddb.setGetDoctorByIDFailureListener(this)
         ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
-         */
 
-        //Find Doctors
+        /********Find Doctors*******/
         ddb.setGetDoctorsSuccessListener(this)
         ddb.setGetDoctorsFailureListener(this)
         //With email and limit
@@ -65,15 +63,18 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //Wrong email
         ddb.getDoctors("naafiz@gmail.com")
 
-        //Find Top Doctors in a particular speciality
+        /****Find Top Doctors in a particular speciality*****/
         ddb.setGetTopDoctorsSuccessListener(this)
         ddb.setGetTopDoctorsFailureListener(this)
         ddb.getTopDoctors("ENT", 2)
 
-        //Find Top Doctors in general
+        /****Find Top Doctors in general****/
         ddb.setGetTopDoctorsInAllCategoriesSuccessListener(this)
         ddb.setGetTopDoctorsInAllCategoriesFailureListener(this)
+        //Without limit
         ddb.getTopDoctorsInAllCategories()
+        //With Limit
+        ddb.getTopDoctorsInAllCategories(1)
 
 
 
@@ -81,22 +82,22 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     //Find Doctor By Id
     override fun getDoctorByIDSuccess(doctor: Doctor) {
-        Log.d("Retro Within Main", "Doctor name: ${doctor.name}")
+        Log.d("Doc by id", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
     }
 
     override fun getDoctorByIDFailure() {
-        Log.d("oopsie", "Failure")
+        Log.d("oopsie by id", "Failure")
     }
 
     //Find Doctors
     override fun getDoctorsSuccess(doctor: Doctor) {
-        Log.d("Doctors Within Mainnn", "Doctor name: ${doctor.name}")
+        Log.d("Doctors general", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
     }
 
     override fun getDoctorsFailure(message: String) {
-        Log.d("oopsie", message)
+        Log.d("oopsie docs general", message)
     }
 
     //Find top doctors
@@ -106,17 +107,17 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     }
 
     override fun getTopDoctorsFailure(message: String) {
-        Log.d("oopsie", message)
+        Log.d("oopsie top docs", message)
     }
 
     //Find Top Doctors in all Categories
     override fun getTopDoctorsInAllCategoriesSuccess(doctor: Doctor, rating: Rating) {
-        Log.d("TopDocs Within Mainnn", "Doctor name: ${doctor.name} Rating: ${rating.average}")
+        Log.d("TopDocs all Within Main", "Doctor name: ${doctor.name} Rating: ${rating.average}")
         tv.text = doctor.name + " " + rating.average
     }
 
     override fun getTopDoctorsInAllCategoriesFailure(message: String) {
-        Log.d("oopsie", message)
+        Log.d("oopsie top docs all", message)
     }
 
     /*AuthDB usage

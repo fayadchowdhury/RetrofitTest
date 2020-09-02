@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.example.retrofittest.databasing.AuthDB
 import com.example.retrofittest.databasing.DoctorDB
 import com.example.retrofittest.models.Doctor
+import com.example.retrofittest.models.Patient
 import com.example.retrofittest.models.Rating
 
 class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
@@ -14,8 +15,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     DoctorDB.GetDoctorsFailureListener,
     DoctorDB.GetTopDoctorsSuccessListener,
     DoctorDB.GetTopDoctorsFailureListener,
-    DoctorDB.GetTopDoctorsInAllCategoriesSuccessListener,
-    DoctorDB.GetTopDoctorsInAllCategoriesFailureListener  /* AuthDB interfaces AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener */{
+    AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener,
+    DoctorDB.UpdateDoctorProfileSuccessListener,
+    DoctorDB.UpdateDoctorProfileFailureListener,
+    DoctorDB.DeleteDoctorProfileSuccessListener,
+    DoctorDB.DeleteDoctorProfileFailureListener{
+
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -27,7 +32,6 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         tv = findViewById(R.id.text)
 
-        /*AuthDB usage
         adb = AuthDB(this)
         adb.setRegisterPatientBasicSuccessListener(this)
         adb.setRegisterPatientBasicFailureListener(this)
@@ -38,45 +42,62 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         adb.setLoginDoctorSuccessListener(this)
         adb.setLoginDoctorFailureListener(this)
 
-        adb.registerPatientBasic("Dr. Zayad Chowdhury", "zayad.chowdhury@gmail.com", "zipto123")
-        adb.loginPatient("zayad.chowdhury@gmail.com", "zipto123")*/
+//        adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
+//        adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
 
 
-        ddb = DoctorDB()
+        ddb = DoctorDB(this)
+        ddb.setUpdateDoctorProfileSuccessListener(this)
+        ddb.setUpdateDoctorProfileFailureListener(this)
 
-        /*****Find Doctor By Id******/
-        ddb.setGetDoctorByIDSuccessListener(this)
-        ddb.setGetDoctorByIDFailureListener(this)
-        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
 
-        /********Find Doctors*******/
+        ddb.setDeleteDoctorProfileSuccessListener(this)
+        ddb.setDeleteDoctorProfileFailureListener(this)
+//        /*****Find Doctor By Id******/
+//        ddb.setGetDoctorByIDSuccessListener(this)
+//        ddb.setGetDoctorByIDFailureListener(this)
+//        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
+//
+//        /********Find Doctors*******/
         ddb.setGetDoctorsSuccessListener(this)
         ddb.setGetDoctorsFailureListener(this)
-        //With email and limit
-        ddb.getDoctors(1, "hakimrahman@gmail.com")
-        //Only with limit
-        ddb.getDoctors(1)
-        //Only With email
-        ddb.getDoctors( "rh@gmail.com")
-        //In general
-        ddb.getDoctors()
-        //Wrong email
-        ddb.getDoctors("naafiz@gmail.com")
-
-        /****Find Top Doctors in a particular speciality*****/
+//        //With email and limit
+//        ddb.getDoctors(1, "hakimrahman@gmail.com")
+//        //Only with limit
+//        ddb.getDoctors(1)
+//        //Only With email
+//        ddb.getDoctors( "rh@gmail.com")
+//        //In general
+//        ddb.getDoctors()
+//        //Wrong email
+//        ddb.getDoctors("naafiz@gmail.com")
+//
+//        /****Find Top Doctors in a particular speciality*****/
         ddb.setGetTopDoctorsSuccessListener(this)
         ddb.setGetTopDoctorsFailureListener(this)
-        ddb.getTopDoctors("ENT", 2)
+//        ddb.getTopDoctors("ENT", 2)
+//
+//        /****Find Top Doctors in general****/
+//        ddb.setGetTopDoctorsInAllCategoriesSuccessListener(this)
+//        ddb.setGetTopDoctorsInAllCategoriesFailureListener(this)
+//        //Without limit
+//        ddb.getTopDoctorsInAllCategories()
+//        //With Limit
+//        ddb.getTopDoctorsInAllCategories(1)
 
-        /****Find Top Doctors in general****/
-        ddb.setGetTopDoctorsInAllCategoriesSuccessListener(this)
-        ddb.setGetTopDoctorsInAllCategoriesFailureListener(this)
-        //Without limit
-        ddb.getTopDoctorsInAllCategories()
-        //With Limit
-        ddb.getTopDoctorsInAllCategories(1)
+//        val updMap = mutableMapOf<String, String>()
+//        updMap.put("name", "CHOMKYBASTARDO")
+//        updMap.put("bmdc", "6996420")
+//        ddb.updateDoctorProfile(updMap)
 
 
+//        val queryMap = mutableMapOf<String, String>()
+//        queryMap.put("name", "CHOMKYBASTARDO")
+//        queryMap.put("specialty", "Cardiology")
+//        queryMap.put("limit", "2")
+//        ddb.getTopDoctors(queryMap)
+
+        ddb.deleteDoctorById()
 
     }
 
@@ -110,17 +131,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("oopsie top docs", message)
     }
 
-    //Find Top Doctors in all Categories
-    override fun getTopDoctorsInAllCategoriesSuccess(doctor: Doctor, rating: Rating) {
-        Log.d("TopDocs all Within Main", "Doctor name: ${doctor.name} Rating: ${rating.average}")
-        tv.text = doctor.name + " " + rating.average
+    override fun updateDoctorProfileSuccess() {
+        Log.d("UpdateProfile", "BHAI JITSEN")
     }
 
-    override fun getTopDoctorsInAllCategoriesFailure(message: String) {
-        Log.d("oopsie top docs all", message)
+    override fun updateDoctorProfileFailure() {
+        Log.d("UpdateProfile", "BHAI HOLO NA TO :(")
     }
 
-    /*AuthDB usage
     override fun registerDoctorBasicSuccess(doctor: Doctor) {
         Log.d("Retro Within Main", "Doctor name: ${doctor.name}")
         tv.text = doctor.name + " " + doctor.email
@@ -155,6 +173,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     override fun loginPatientFailure() {
         Log.d("oopsie", "Failure")
-    }*/
+    }
+
+    override fun deleteDoctorProfileSuccess() {
+        Log.d("DELETEMAIN", "Success")
+    }
+
+    override fun deleteDoctorProfileFailure() {
+        Log.d("DELETEMAIN", "Failure")
+    }
 
 }

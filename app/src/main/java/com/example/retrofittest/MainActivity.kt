@@ -6,8 +6,10 @@ import android.util.Log
 import android.widget.TextView
 import com.example.retrofittest.databasing.AuthDB
 import com.example.retrofittest.databasing.DoctorDB
+import com.example.retrofittest.databasing.PatientDB
 import com.example.retrofittest.databasing.SlotDB
 import com.example.retrofittest.models.*
+
 
 class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
     DoctorDB.GetDoctorsSuccessListener,
@@ -22,11 +24,20 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     SlotDB.createSlotSuccessListener,
     SlotDB.createSlotFailureListener,
     SlotDB.deleteDoctorSlotsSuccessListener,
-    SlotDB.deleteDoctorSlotsFailureListener{
+    SlotDB.deleteDoctorSlotsFailureListener,
+    /* PatientDB interfaces */
+    PatientDB.GetPatientByIdSuccessListener,
+    PatientDB.GetPatientByIdFailureListener,
+    PatientDB.UpdatePatientProfileSuccessListener,
+    PatientDB.UpdatePatientProfileFailureListener,
+    PatientDB.DeletePatientByIdSuccessListener,
+    PatientDB.DeletePatientByIdFailureListener
+{
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
     lateinit var sdb: SlotDB
+    lateinit var pdb: PatientDB
     lateinit var tv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +122,36 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
 //        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
         sdb.deleteSlotsByDoctorId()
+
+
+        // ***     PatientDB usage      ***//
+
+        // Get Patient by ID
+        pdb = PatientDB(this)
+        pdb.setGetPatientByIdSuccessListener(this)
+        pdb.setGetPatientByIdFailureListener(this)
+        //Test
+        pdb.getPatientById("")
+
+        // Update Patient Profile
+        pdb.setUpdatePatientProfileSuccessListener(this)
+        pdb.setUpdatePatientProfileFailureListener(this)
+        //Test
+        val updMap = mutableMapOf<String, String>()
+        updMap.put("name", "Kokila ben")
+        updMap.put("email", "kokilaben@rocketmail.com")
+        updMap.put("phone", "+8801769696969")
+        //updMap.put("dob", "")
+        updMap.put("gender", "female")
+        updMap.put("blood", "O-")
+        updMap.put("address", "cooker")
+        pdb.updatePatientProfile(updMap)
+
+        //Delete Patient by Id
+        pdb.setDeletePatientByIdSuccessListener(this)
+        pdb.setDeletePatientByIdFailureListener(this)
+        //Test
+        pdb.deletePatientById()
     }
 
     //Find Doctor By Id
@@ -218,4 +259,37 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun deleteDoctorSlotsFailure() {
         Log.d("SLOTDEL", "Failed to delete slots")
     }
+
+
+
+    //Find Patient By Id
+
+    override fun getPatientByIdSuccess(patient: Patient) {
+        Log.d("Patient by id", "Patient name: ${patient.name}")
+        tv.text = patient.name + " " + patient.email
+    }
+
+    override fun getPatientByIdFailure() {
+        Log.d("oopsie by id", "Failure")
+    }
+    //Update Patient Profile
+
+    override fun updatePatientProfileSuccess() {
+        Log.d("UpdateProfile", "BHAI JITSEN")
+    }
+
+    override fun updatePatientProfileFailure() {
+        Log.d("UpdateProfile", "BHAI HOLO NA TO :(")
+    }
+
+    // Delete Patient by Id
+
+    override fun deletePatientByIdSuccess() {
+        Log.d("DELETEMAIN", "Success")
+    }
+
+    override fun deletePatientByIdFailure() {
+        Log.d("DELETEMAIN", "Failure")
+    }
+
 }

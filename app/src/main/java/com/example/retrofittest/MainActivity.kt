@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
       //adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
        //adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
-
+        adb.loginPatient("ks@gmail.com","kabir1234")
 
         ddb = DoctorDB(this)
         ddb.setUpdateDoctorProfileSuccessListener(this)
@@ -154,19 +154,20 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         pdb.setDeletePatientByIdSuccessListener(this)
         pdb.setDeletePatientByIdFailureListener(this)
         //Test
-        pdb.deletePatientById()
+        //pdb.deletePatientById()
 
         //RATING DB
         rdb = RatingDB(this)
         //rdb.setGetRatingsByIDSuccessListener(this)
         //rdb.setGetRatingsByIDFailureListener(this)
         //rdb.getRatingsById("c27e6999-cdd6-4569-9b89-6118b78d2db4")
-        rdb.setUpdateRatingSuccessListener(this)
-        rdb.setUpdateRatingFailureListener(this)
-        val updMap2 = mutableMapOf<String,String>()
-        updMap2.put("doctorId","c27e6999-cdd6-4569-9b89-6118b78d2db4")
-        updMap2.put("rating","5")
-        rdb.editRatingsById(updMap2)
+
+        //rdb.setUpdateRatingSuccessListener(this)
+        //rdb.setUpdateRatingFailureListener(this)
+        //val updMap2 = mutableMapOf<String,String>()
+        //updMap2["doctorId"] = "c27e6999-cdd6-4569-9b89-6118b78d2db4"
+        //updMap2["rating"] = "5"
+        //rdb.editRatingsById(updMap2)
     }
 
     //Find Doctor By Id
@@ -241,6 +242,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun loginPatientSuccess(patient: Patient) {
         Log.d("Retro Within Main", "Patient name: ${patient.name}")
         tv.text = patient.name + " " + patient.email
+
     }
 
     override fun loginPatientFailure() {

@@ -53,6 +53,7 @@ class RatingDB(val context: Context) {
         val sh = PreferenceManager.getDefaultSharedPreferences(context)
         val jwt = sh.getString("jwt", "NONE FOUND").toString()
         val uid = sh.getString("uid", "NONE FOUND").toString()
+
         if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
         {
             //don't go any further
@@ -61,27 +62,30 @@ class RatingDB(val context: Context) {
         else
         {
             val paramsJSON = JSONObject()
-            paramsJSON.put("doctorId", uid)
+            paramsJSON.put("doctorId", updOpts["doctorId"].toString())
             paramsJSON.put("rating",updOpts["rating"].toString())
-            //manually check the updOpts map; could possibly be done with an existing converter but I cannot be bothered at this point
+
 
             val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
 
             val headerJwt = "Bearer $jwt"
-            val call = APIObject.api.updatePatientProfileById(headerJwt, params)
+            val call = APIObject.api.editRatingsById(headerJwt, params)
 
-            call.enqueue(object: Callback<ResponseBody> {
+            call.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
                     mUpdateRatingFailureListener.updateRatingFailure()
                 }
 
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    if ( response.isSuccessful )
-                    {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+
                         mUpdateRatingSuccessListener.updateRatingSuccess()
-                    }
-                    else
-                    {
+                    } else {
+
                         mUpdateRatingFailureListener.updateRatingFailure()
                     }
                 }

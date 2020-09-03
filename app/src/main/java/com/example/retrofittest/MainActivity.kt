@@ -6,9 +6,8 @@ import android.util.Log
 import android.widget.TextView
 import com.example.retrofittest.databasing.AuthDB
 import com.example.retrofittest.databasing.DoctorDB
-import com.example.retrofittest.models.Doctor
-import com.example.retrofittest.models.Patient
-import com.example.retrofittest.models.Rating
+import com.example.retrofittest.databasing.SlotDB
+import com.example.retrofittest.models.*
 
 class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
     DoctorDB.GetDoctorsSuccessListener,
@@ -19,11 +18,15 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     DoctorDB.UpdateDoctorProfileSuccessListener,
     DoctorDB.UpdateDoctorProfileFailureListener,
     DoctorDB.DeleteDoctorProfileSuccessListener,
-    DoctorDB.DeleteDoctorProfileFailureListener{
-
+    DoctorDB.DeleteDoctorProfileFailureListener,
+    SlotDB.createSlotSuccessListener,
+    SlotDB.createSlotFailureListener,
+    SlotDB.deleteDoctorSlotsSuccessListener,
+    SlotDB.deleteDoctorSlotsFailureListener{
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
+    lateinit var sdb: SlotDB
     lateinit var tv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,10 +98,19 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 //        queryMap.put("name", "CHOMKYBASTARDO")
 //        queryMap.put("specialty", "Cardiology")
 //        queryMap.put("limit", "2")
+//        ddb.getDoctors(queryMap)
 //        ddb.getTopDoctors(queryMap)
 
-        ddb.deleteDoctorById()
+//        ddb.deleteDoctorById()
 
+        sdb = SlotDB(this)
+        sdb.setCreateSlotFailureListener(this)
+        sdb.setCreateSlotSuccessListener(this)
+        sdb.setDeleteDoctorSlotsSuccessListener(this)
+        sdb.setDeleteDoctorSlotsFailureListener(this)
+
+//        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
+        sdb.deleteSlotsByDoctorId()
     }
 
     //Find Doctor By Id
@@ -112,9 +124,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     }
 
     //Find Doctors
-    override fun getDoctorsSuccess(doctor: Doctor) {
-        Log.d("Doctors general", "Doctor name: ${doctor.name}")
-        tv.text = doctor.name + " " + doctor.email
+    override fun getDoctorsSuccess(doctorArray: ArrayList<Doctor>) {
+        for ( doc in doctorArray )
+        {
+            Log.d("getDoctorsSuccess", "Name ${doc.name}")
+        }
     }
 
     override fun getDoctorsFailure(message: String) {
@@ -122,9 +136,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     }
 
     //Find top doctors
-    override fun getTopDoctorsSuccess(doctor: Doctor, rating: Rating) {
-        Log.d("TopDocs Within Mainnn", "Doctor name: ${doctor.name} Rating: ${rating.average}")
-        tv.text = doctor.name + " " + rating.average
+    override fun getTopDoctorsSuccess(ratedDoctorArray: ArrayList<RatedDoctor>) {
+        for ( doc in ratedDoctorArray )
+        {
+            Log.d("getDoctorsSuccess", "Name ${doc.doctor.name}")
+        }
     }
 
     override fun getTopDoctorsFailure(message: String) {
@@ -183,4 +199,23 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("DELETEMAIN", "Failure")
     }
 
+
+    override fun createSlotSuccess(slotArray: ArrayList<Slot>) {
+        for ( slot in slotArray )
+        {
+            Log.d("SLOTSUCCESS", "slot ID = ${slot.id} starting at ${slot.startTime} and ending at ${slot.endTime} on ${slot.dateOfSlot}")
+        }
+    }
+
+    override fun createSlotFailure() {
+        Log.d("SLOTFAILURE", "Failure to create slots")
+    }
+
+    override fun deleteDoctorSlotsSuccess() {
+        Log.d("SLOTDEL", "Slots deleted successfully")
+    }
+
+    override fun deleteDoctorSlotsFailure() {
+        Log.d("SLOTDEL", "Failed to delete slots")
+    }
 }

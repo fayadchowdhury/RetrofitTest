@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     PatientDB.DeletePatientByIdFailureListener,
     /* RatingDB interfaces */
     RatingDB.GetRatingsByIdSuccessListener,
-    RatingDB.GetRatingsByIdFailureListener
+    RatingDB.GetRatingsByIdFailureListener,
+    RatingDB.UpdateRatingSuccessListener,
+    RatingDB.UpdateRatingFailureListener
 {
 
     lateinit var ddb: DoctorDB
@@ -159,6 +161,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //rdb.setGetRatingsByIDSuccessListener(this)
         //rdb.setGetRatingsByIDFailureListener(this)
         //rdb.getRatingsById("c27e6999-cdd6-4569-9b89-6118b78d2db4")
+        rdb.setUpdateRatingSuccessListener(this)
+        rdb.setUpdateRatingFailureListener(this)
+        val updMap2 = mutableMapOf<String,String>()
+        updMap2.put("doctorId","c27e6999-cdd6-4569-9b89-6118b78d2db4")
+        updMap2.put("rating","5")
+        rdb.editRatingsById(updMap2)
     }
 
     //Find Doctor By Id
@@ -309,5 +317,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun getRatingsByIDFailure() {
         Log.d("Rating by ID Failure","Failure")
     }
+
+    override fun updateRatingSuccess() {
+        Log.d("Rating Update","Success")
+    }
+
+    override fun updateRatingFailure() {
+        Log.d("Rating Update","Failure")
+    }
+
 
 }

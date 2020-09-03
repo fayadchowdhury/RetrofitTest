@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.example.retrofittest.databasing.AuthDB
-import com.example.retrofittest.databasing.DoctorDB
-import com.example.retrofittest.databasing.PatientDB
-import com.example.retrofittest.databasing.SlotDB
+import com.example.retrofittest.databasing.*
 import com.example.retrofittest.models.*
 
 
@@ -31,12 +28,16 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     PatientDB.UpdatePatientProfileSuccessListener,
     PatientDB.UpdatePatientProfileFailureListener,
     PatientDB.DeletePatientByIdSuccessListener,
-    PatientDB.DeletePatientByIdFailureListener
+    PatientDB.DeletePatientByIdFailureListener,
+    /* RatingDB interfaces */
+    RatingDB.GetRatingsByIdSuccessListener,
+    RatingDB.GetRatingsByIdFailureListener
 {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
     lateinit var sdb: SlotDB
+    lateinit var rdb: RatingDB
     lateinit var pdb: PatientDB
     lateinit var tv: TextView
 
@@ -56,8 +57,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         adb.setLoginDoctorSuccessListener(this)
         adb.setLoginDoctorFailureListener(this)
 
-//        adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
-//        adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
+      //adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
+       //adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
 
 
         ddb = DoctorDB(this)
@@ -68,9 +69,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         ddb.setDeleteDoctorProfileSuccessListener(this)
         ddb.setDeleteDoctorProfileFailureListener(this)
 //        /*****Find Doctor By Id******/
-//        ddb.setGetDoctorByIDSuccessListener(this)
-//        ddb.setGetDoctorByIDFailureListener(this)
-//        ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
+        ddb.setGetDoctorByIDSuccessListener(this)
+        ddb.setGetDoctorByIDFailureListener(this)
+        //ddb.getDoctorByID("04999760-63aa-41d5-8927-ec8b2ab86a4c")
 //
 //        /********Find Doctors*******/
         ddb.setGetDoctorsSuccessListener(this)
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         pdb.setGetPatientByIdSuccessListener(this)
         pdb.setGetPatientByIdFailureListener(this)
         //Test
-        pdb.getPatientById("")
+        pdb.getPatientById("2af1a743-4411-4311-80fc-64bef5373bea")
 
         // Update Patient Profile
         pdb.setUpdatePatientProfileSuccessListener(this)
@@ -152,6 +153,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         pdb.setDeletePatientByIdFailureListener(this)
         //Test
         pdb.deletePatientById()
+
+        //RATING DB
+        rdb = RatingDB(this)
+        //rdb.setGetRatingsByIDSuccessListener(this)
+        //rdb.setGetRatingsByIDFailureListener(this)
+        //rdb.getRatingsById("c27e6999-cdd6-4569-9b89-6118b78d2db4")
     }
 
     //Find Doctor By Id
@@ -290,6 +297,17 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     override fun deletePatientByIdFailure() {
         Log.d("DELETEMAIN", "Failure")
+    }
+
+    //Rating Routes
+
+    //Rating by Id
+    override fun getRatingsByIDSuccess(rating: Rating) {
+        Log.d("Rating by ID Success", rating.average)
+    }
+
+    override fun getRatingsByIDFailure() {
+        Log.d("Rating by ID Failure","Failure")
     }
 
 }

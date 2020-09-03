@@ -1,5 +1,6 @@
 package com.example.retrofittest.models
 
+import org.json.JSONArray
 import org.json.JSONObject
 
 class Rating

@@ -33,7 +33,16 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     RatingDB.GetRatingsByIdSuccessListener,
     RatingDB.GetRatingsByIdFailureListener,
     RatingDB.UpdateRatingSuccessListener,
-    RatingDB.UpdateRatingFailureListener
+    RatingDB.UpdateRatingFailureListener,
+    /* AppointmentDB interfaces */
+    AppointmentDB.ViewPastAppointmentsPatientSuccessListener,
+    AppointmentDB.ViewPastAppointmentsPatientFailureListener,
+    AppointmentDB.ViewPastAppointmentsDoctorSuccessListener,
+    AppointmentDB.ViewPastAppointmentsDoctorFailureListener,
+    AppointmentDB.ViewUpcomingAppointmentsPatientSuccessListener,
+    AppointmentDB.ViewUpcomingAppointmentsPatientFailureListener,
+    AppointmentDB.ViewUpcomingAppointmentsDoctorSuccessListener,
+    AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener
 {
 
     lateinit var ddb: DoctorDB
@@ -41,6 +50,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     lateinit var sdb: SlotDB
     lateinit var rdb: RatingDB
     lateinit var pdb: PatientDB
+    lateinit var appdb: AppointmentDB
     lateinit var tv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,6 +178,20 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //updMap2["doctorId"] = "c27e6999-cdd6-4569-9b89-6118b78d2db4"
         //updMap2["rating"] = "5"
         //rdb.editRatingsById(updMap2)
+
+
+        //Appointment DB
+        appdb = AppointmentDB(this)
+//        //Same structure for Viewing patient and doctor past appointments
+//        appdb.setViewPastAppointmentsPatientSuccessListener(this)
+//        appdb.setViewPastAppointmentsPatientFailureListener(this)
+//        val updMap3 = mutableMapOf<String,String>()
+//        updMap3["patientId"] = "2af1a743-4411-4311-80fc-64bef5373bea"
+//        appdb.viewPastAppointmentsPatient(updMap3)
+//        //Same structure for Viewing patient and doctor upcoming appointments
+//        appdb.setViewUpcomingAppointmentsDoctorSuccessListener(this)
+//        appdb.setViewUpcomingAppointmentsDoctorFailureListener(this)
+//        appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
     }
 
     //Find Doctor By Id
@@ -326,6 +350,46 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     override fun updateRatingFailure() {
         Log.d("Rating Update","Failure")
+    }
+
+    override fun viewUpcomingAppointmentsPatientSuccess(appointments: ArrayList<Appointment>) {
+        for (appointment in appointments){
+            Log.d("UpcomingAppPatient", appointment.patientId)
+        }
+    }
+
+    override fun viewUpcomingAppointmentsPatientFailure() {
+        Log.d("UpcomingAppPatient", "viewUpcomingAppointmentsPatientFailure: Failure")
+    }
+
+    override fun viewUpcomingAppointmentsDoctorSuccess(appointments: ArrayList<Appointment>) {
+        for (appointment in appointments){
+            Log.d("UpcomingDoctor", appointment.patientId)
+        }
+    }
+
+    override fun viewUpcomingAppointmentsDoctorFailure() {
+        Log.d("UpcomingDoctor", "failure")
+    }
+
+    override fun viewPastAppointmentsPatientSuccess(appointments: ArrayList<Appointment>) {
+        for (appointment in appointments){
+            Log.d("PastAppPatient", appointment.patientId)
+        }
+    }
+
+    override fun viewPastAppointmentsPatientFailure() {
+        Log.d("PastAppPatient", "failure")
+    }
+
+    override fun viewPastAppointmentsDoctorSuccess(appointments: ArrayList<Appointment>) {
+        for (appointment in appointments){
+            Log.d("PastAppDoctor", appointment.patientId)
+        }
+    }
+
+    override fun viewPastAppointmentsDoctorFailure() {
+        Log.d("PastAppDoctor", "failure")
     }
 
 

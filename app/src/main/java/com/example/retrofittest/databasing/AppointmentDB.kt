@@ -2,6 +2,7 @@ package com.example.retrofittest.databasing
 
 import android.content.Context
 import androidx.preference.PreferenceManager
+import com.example.retrofittest.MainActivity
 import com.example.retrofittest.models.Appointment
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -27,6 +28,10 @@ class AppointmentDB(val context: Context) {
     //Past Appointment for doctors interfaces
     lateinit var mViewPastAppointmentsDoctorSuccessListener: ViewPastAppointmentsDoctorSuccessListener
     lateinit var mViewPastAppointmentsDoctorFailureListener: ViewPastAppointmentsDoctorFailureListener
+
+    //Update Prescription for doctors interfaces
+    lateinit var mUpdatePrescriptionSuccessListener: UpdatePrescriptionSuccessListener
+    lateinit var mUpdatePrescriptionFailureListener: UpdatePrescriptionFailureListener
 
 
     fun viewUpcomingAppointmentsPatient(patientId : String){
@@ -174,6 +179,55 @@ class AppointmentDB(val context: Context) {
         return appointments
     }
 
+    //Update Prescription
+
+    fun updatePrescription(updOpts: Map<String, String>)
+    {
+        val sh = PreferenceManager.getDefaultSharedPreferences(context)
+        val jwt = sh.getString("jwt", "NONE FOUND").toString()
+        val uid = sh.getString("uid", "NONE FOUND").toString()
+        if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
+        {
+            //don't go any further
+            mUpdatePrescriptionFailureListener.updatePrescriptionFailure()
+        }
+        else
+        {
+            val paramsJSON = JSONObject()
+            paramsJSON.put("id", uid)
+
+            //manually check the updOpts map; could possibly be done with an existing converter but I cannot be bothered at this point
+            if ( updOpts.containsKey("prescription") )
+                paramsJSON.put("prescription", updOpts["prescription"].toString())
+
+            val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+            val headerJwt = "Bearer $jwt"
+            val call = APIObject.api.updatePrescription(headerJwt, params)
+
+            call.enqueue(object: Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    mUpdatePrescriptionFailureListener.updatePrescriptionFailure()
+                }
+
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if ( response.isSuccessful )
+                    {
+                        mUpdatePrescriptionSuccessListener.updatePrescriptionSuccess()
+                    }
+                    else
+                    {
+                        mUpdatePrescriptionFailureListener.updatePrescriptionFailure()
+                    }
+                }
+            })
+        }
+    }
+
+
+
+
+
     /***Interfaces***/
     //Upcoming Appointments for patient
     interface ViewUpcomingAppointmentsPatientSuccessListener{
@@ -209,6 +263,19 @@ class AppointmentDB(val context: Context) {
     interface ViewPastAppointmentsDoctorFailureListener{
         fun viewPastAppointmentsDoctorFailure()
     }
+
+    //Update Prescription
+    interface UpdatePrescriptionSuccessListener
+    {
+        fun updatePrescriptionSuccess()
+    }
+    interface UpdatePrescriptionFailureListener
+    {
+        fun updatePrescriptionFailure()
+    }
+
+
+
     /***interface setters***/
     //set Upcoming Appointments for patient
     fun setViewUpcomingAppointmentsPatientSuccessListener(int: ViewUpcomingAppointmentsPatientSuccessListener){
@@ -241,5 +308,16 @@ class AppointmentDB(val context: Context) {
     }
     fun setViewPastAppointmentsDoctorFailureListener(int: ViewPastAppointmentsDoctorFailureListener){
         this.mViewPastAppointmentsDoctorFailureListener = int
+    }
+
+    //Update Prescription
+
+    fun setUpdatePrescriptionSuccessListener(int: MainActivity)
+    {
+        this.mUpdatePrescriptionSuccessListener = int
+    }
+    fun setUpdatePrescriptionFailureListener(int: MainActivity)
+    {
+        this.mUpdatePrescriptionFailureListener = int
     }
 }

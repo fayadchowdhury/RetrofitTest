@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     SlotDB.createSlotFailureListener,
     SlotDB.deleteDoctorSlotsSuccessListener,
     SlotDB.deleteDoctorSlotsFailureListener,
+    SlotDB.deleteSlotByIdSuccessListener,
+    SlotDB.deleteSlotByIdFailureListener,
     /* PatientDB interfaces */
     PatientDB.GetPatientByIdSuccessListener,
     PatientDB.GetPatientByIdFailureListener,
@@ -42,7 +44,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.ViewUpcomingAppointmentsPatientSuccessListener,
     AppointmentDB.ViewUpcomingAppointmentsPatientFailureListener,
     AppointmentDB.ViewUpcomingAppointmentsDoctorSuccessListener,
-    AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener
+    AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener,
+    AppointmentDB.UpdatePrescriptionSuccessListener,
+    AppointmentDB.UpdatePrescriptionFailureListener
 {
 
     lateinit var ddb: DoctorDB
@@ -136,6 +140,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 //        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
         sdb.deleteSlotsByDoctorId()
 
+        sdb.setDeleteSlotByIdSuccessListener(this)
+        sdb.setDeleteSlotByIdFailureListener(this)
+        sdb.deleteSlotById()
 
         // ***     PatientDB usage      ***//
 
@@ -180,18 +187,27 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //rdb.editRatingsById(updMap2)
 
 
-        //Appointment DB
-        appdb = AppointmentDB(this)
-//        //Same structure for Viewing patient and doctor past appointments
-//        appdb.setViewPastAppointmentsPatientSuccessListener(this)
-//        appdb.setViewPastAppointmentsPatientFailureListener(this)
-//        val updMap3 = mutableMapOf<String,String>()
-//        updMap3["patientId"] = "2af1a743-4411-4311-80fc-64bef5373bea"
-//        appdb.viewPastAppointmentsPatient(updMap3)
-//        //Same structure for Viewing patient and doctor upcoming appointments
-//        appdb.setViewUpcomingAppointmentsDoctorSuccessListener(this)
-//        appdb.setViewUpcomingAppointmentsDoctorFailureListener(this)
-//        appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
+ //       //Appointment DB
+ //       appdb = AppointmentDB(this)
+ //       //Same structure for Viewing patient and doctor past appointments
+ //       appdb.setViewPastAppointmentsPatientSuccessListener(this)
+ //       appdb.setViewPastAppointmentsPatientFailureListener(this)
+ //       val updMap3 = mutableMapOf<String,String>()
+ //       updMap3["patientId"] = "2af1a743-4411-4311-80fc-64bef5373bea"
+ //       appdb.viewPastAppointmentsPatient(updMap3)
+ //       //Same structure for Viewing patient and doctor upcoming appointments
+ //       appdb.setViewUpcomingAppointmentsDoctorSuccessListener(this)
+ //       appdb.setViewUpcomingAppointmentsDoctorFailureListener(this)
+ //       appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
+
+         //Update Prescription
+          appdb.setUpdatePrescriptionSuccessListener(this)
+          appdb.setUpdatePrescriptionFailureListener(this)
+
+          val updMapPres = mutableMapOf<String, String>()
+          updMapPres.put("prescription", "Kokila ben")
+          appdb.updatePrescription(updMapPres)
+
     }
 
     //Find Doctor By Id
@@ -301,6 +317,16 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("SLOTDEL", "Failed to delete slots")
     }
 
+    //Delete slot by Id
+
+    override fun deleteSlotByIdSuccess() {
+        Log.d("SLOTDELByID", "Slot deleted successfully")
+    }
+
+    override fun deleteSlotByIdFailure() {
+        Log.d("SLOTDELByID", "Failed to delete slot")
+    }
+
 
 
     //Find Patient By Id
@@ -390,6 +416,16 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     override fun viewPastAppointmentsDoctorFailure() {
         Log.d("PastAppDoctor", "failure")
+    }
+
+    //Update Prescription
+
+    override fun updatePrescriptionSuccess() {
+        Log.d("UpdatePrescription", "BHAI JITSEN")
+    }
+
+    override fun updatePrescriptionFailure() {
+        Log.d("UpdatePrescription", "BHAI HOLO NA TO :(")
     }
 
 

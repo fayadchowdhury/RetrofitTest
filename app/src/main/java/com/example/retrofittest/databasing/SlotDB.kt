@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import com.example.retrofittest.models.Doctor
 import com.example.retrofittest.models.Slot
-import com.example.retrofittest.models.SlotInfo
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -32,15 +31,6 @@ class SlotDB(val context: Context) {
     lateinit var mDeleteSlotByIdSuccessListener: deleteSlotByIdSuccessListener
 
     // functions
-    fun getSlotById()
-    {
-
-    }
-
-    fun viewAllSlotsByDoctorId()
-    {
-
-    }
 
     //TODO: Make this function cleaner parameter-wise
     fun createSlot(date: String, startTime: String, endTime: String, numSlots: Int, status: Int)
@@ -112,13 +102,8 @@ class SlotDB(val context: Context) {
                 {
                     val jsonRes = JSONObject(response.body()!!.string())
                     val slotJSONObject = jsonRes.getJSONObject("slotRet")
-                    val doctorJSONObject =  slotJSONObject.getJSONObject("doctor")
                     val slot = Slot().fromJSON(slotJSONObject)
-                    val doctor = Doctor().fromJSON(doctorJSONObject)
-                    val slotInfo = SlotInfo()
-                    slotInfo.doctor = doctor
-                    slotInfo.slot = slot
-                    mGetSlotByIDSuccessListener.getSlotByIdSuccessListener(slotInfo)
+                    mGetSlotByIDSuccessListener.getSlotByIdSuccessListener(slot)
                 }
                 else
                 {
@@ -132,6 +117,7 @@ class SlotDB(val context: Context) {
     /*****View All Slots By Doctor*****/
     fun viewAllSlotsByDoctor(doctorId: String)
     {
+        val slotsArray = arrayListOf<Slot>()
         val paramsJSON = JSONObject()
         paramsJSON.put("doctorId", doctorId)
 
@@ -146,7 +132,21 @@ class SlotDB(val context: Context) {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if ( response.isSuccessful )
                 {
-                    mViewAllSlotsByDoctorSuccessListener.viewAllSlotsByDoctorSuccessListener()
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val slots = jsonRes.getJSONArray("slots")
+
+                    if(slots.length() != 0){
+                        for(i in 0 until slots.length()){
+                            val slotObj = slots.getJSONObject(i)
+                            val slot = Slot().fromJSON(slotObj)
+                            slotsArray.add(slot)
+                        }
+                            mViewAllSlotsByDoctorSuccessListener.viewAllSlotsByDoctorSuccessListener(slotsArray)
+                    }
+                    else{
+                        mViewAllSlotsByDoctorFailureListener.viewAllSlotsByDoctorFailureListener()
+                    }
+
                 }
                 else
                 {
@@ -245,7 +245,7 @@ class SlotDB(val context: Context) {
 
     interface getSlotByIdSuccessListener
     {
-        fun getSlotByIdSuccessListener(slotInfo: SlotInfo)
+        fun getSlotByIdSuccessListener(slot: Slot)
     }
 
     interface getSlotByIdFailureListener
@@ -255,7 +255,7 @@ class SlotDB(val context: Context) {
 
     interface viewAllSlotsByDoctorSuccessListener
     {
-        fun viewAllSlotsByDoctorSuccessListener()
+        fun viewAllSlotsByDoctorSuccessListener(slotsArray: ArrayList<Slot>)
     }
 
     interface viewAllSlotsByDoctorFailureListener

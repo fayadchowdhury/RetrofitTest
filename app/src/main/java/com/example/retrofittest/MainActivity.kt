@@ -152,11 +152,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         sdb.setViewAllSlotsByDoctorSuccessListener(this)
         sdb.setViewAllSlotsByDoctorFailureListener(this)
-        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
+//        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
-        sdb.deleteSlotById("de836858-7cd8-4074-92b1-ca3ceca6aa54")
+//        sdb.deleteSlotById("de836858-7cd8-4074-92b1-ca3ceca6aa54")
 
 
         /**********PatientDB usage**********/
@@ -324,7 +324,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     }
 
     override fun getSlotByIdSuccessListener(slot: Slot) {
-        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slot}")
+        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slot.doctor.name}")
     }
 
     override fun getSlotByIdFailureListener() {

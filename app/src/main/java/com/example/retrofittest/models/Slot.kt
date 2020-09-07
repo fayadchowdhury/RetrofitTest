@@ -35,7 +35,7 @@ class Slot
             slot.status = res.get("status").toString().toInt()
 
         if (res.has("doctor"))
-            doctor = Doctor().fromJSON(res.getJSONObject("doctor"))
+            slot.doctor = Doctor().fromJSON(res.getJSONObject("doctor"))
 
         return slot
     }

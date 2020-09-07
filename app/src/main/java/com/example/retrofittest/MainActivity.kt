@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         tv = findViewById(R.id.text)
 
+        /*******AuthDB********/
         adb = AuthDB(this)
         adb.setRegisterPatientBasicSuccessListener(this)
         adb.setRegisterPatientBasicFailureListener(this)
@@ -75,8 +76,10 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
       //adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
        //adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
-        adb.loginPatient("ks@gmail.com","kabir1234")
+       // adb.loginPatient("ks@gmail.com","kabir1234")
 
+
+        /*******DoctorDB********/
         ddb = DoctorDB(this)
         ddb.setUpdateDoctorProfileSuccessListener(this)
         ddb.setUpdateDoctorProfileFailureListener(this)
@@ -131,27 +134,28 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
 //        ddb.deleteDoctorById()
 
+
+        /*******SlotDB********/
         sdb = SlotDB(this)
         sdb.setCreateSlotFailureListener(this)
         sdb.setCreateSlotSuccessListener(this)
         sdb.setDeleteDoctorSlotsSuccessListener(this)
         sdb.setDeleteDoctorSlotsFailureListener(this)
 
-//        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
-        sdb.deleteSlotsByDoctorId()
+      //  sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
+      //  sdb.deleteSlotsByDoctorId()
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
-        sdb.deleteSlotById()
+        sdb.deleteSlotById("7601d4d2-9a18-43e9-b730-8ed270267c48")
 
-        // ***     PatientDB usage      ***//
-
+        /**********PatientDB usage**********/
         // Get Patient by ID
         pdb = PatientDB(this)
         pdb.setGetPatientByIdSuccessListener(this)
         pdb.setGetPatientByIdFailureListener(this)
         //Test
-        pdb.getPatientById("2af1a743-4411-4311-80fc-64bef5373bea")
+        //pdb.getPatientById("2af1a743-4411-4311-80fc-64bef5373bea")
 
         // Update Patient Profile
         pdb.setUpdatePatientProfileSuccessListener(this)
@@ -165,7 +169,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         updMap.put("gender", "female")
         updMap.put("blood", "O-")
         updMap.put("address", "cooker")
-        pdb.updatePatientProfile(updMap)
+        //pdb.updatePatientProfile(updMap)
 
         //Delete Patient by Id
         pdb.setDeletePatientByIdSuccessListener(this)
@@ -173,7 +177,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //Test
         //pdb.deletePatientById()
 
-        //RATING DB
+        /*******RatingDB********/
         rdb = RatingDB(this)
         //rdb.setGetRatingsByIDSuccessListener(this)
         //rdb.setGetRatingsByIDFailureListener(this)
@@ -187,7 +191,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         //rdb.editRatingsById(updMap2)
 
 
- //       //Appointment DB
+        /*******AppointmentDB********/
  //       appdb = AppointmentDB(this)
  //       //Same structure for Viewing patient and doctor past appointments
  //       appdb.setViewPastAppointmentsPatientSuccessListener(this)
@@ -206,7 +210,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
           val updMapPres = mutableMapOf<String, String>()
           updMapPres.put("prescription", "Kokila ben")
-          appdb.updatePrescription(updMapPres)
+         // appdb.updatePrescription(updMapPres)
 
     }
 
@@ -320,11 +324,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     //Delete slot by Id
 
     override fun deleteSlotByIdSuccess() {
-        Log.d("SLOTDELByID", "Slot deleted successfully")
+        Log.d("SLOTDELByID", "Slot deleted successfully. Yesssssssssssssssss")
     }
 
     override fun deleteSlotByIdFailure() {
-        Log.d("SLOTDELByID", "Failed to delete slot")
+        Log.d("SLOTDELByID", "Failed to delete slot. Nooooooooooooooooooo")
     }
 
 

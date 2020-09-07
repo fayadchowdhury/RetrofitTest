@@ -148,11 +148,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         sdb.setGetSlotByIdSuccessListener(this)
         sdb.setGetSlotByIdFailureListener(this)
-        sdb.getSlotById("7c723ac8-f23f-4bfd-944b-5282c477a016")
+//        sdb.getSlotById("7c723ac8-f23f-4bfd-944b-5282c477a016")
 
         sdb.setViewAllSlotsByDoctorSuccessListener(this)
         sdb.setViewAllSlotsByDoctorFailureListener(this)
-//        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
+        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)

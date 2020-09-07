@@ -92,6 +92,8 @@ class SlotDB(val context: Context) {
     {
         val paramsJSON = JSONObject()
         paramsJSON.put("slotId", slotId)
+
+        Log.d("ParamsJSON", "$paramsJSON")
         val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
         val call = APIObject.api.getSlotById(params)
 
@@ -103,7 +105,6 @@ class SlotDB(val context: Context) {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if ( response.isSuccessful )
                 {
-                    Log.d("Response", "$response ")
                     mGetSlotByIDSuccessListener.getSlotByIdSuccessListener()
                 }
                 else
@@ -115,7 +116,7 @@ class SlotDB(val context: Context) {
 
     }
 
-    
+
 
    //delete slot by ID
 
@@ -138,7 +139,6 @@ class SlotDB(val context: Context) {
 
             val headerJwt = "Bearer $jwt"
             val call = APIObject.api.deleteSlotById(headerJwt, params)
-
             call.enqueue(object: Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     mDeleteSlotByIdFailureListener.deleteSlotByIdFailure()

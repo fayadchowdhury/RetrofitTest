@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.ViewUpcomingAppointmentsDoctorSuccessListener,
     AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener,
     AppointmentDB.UpdatePrescriptionSuccessListener,
-    AppointmentDB.UpdatePrescriptionFailureListener
-{
+    AppointmentDB.UpdatePrescriptionFailureListener, SlotDB.getSlotByIdSuccessListener,
+    SlotDB.getSlotByIdFailureListener {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -145,9 +145,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
       //  sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
       //  sdb.deleteSlotsByDoctorId()
 
+        sdb.setGetSlotByIdSuccessListener(this)
+        sdb.setGetSlotByIdFailureListener(this)
+        sdb.getSlotById("7c723ac8-f23f-4bfd-944b-5282c477a016")
+
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
         sdb.deleteSlotById("7601d4d2-9a18-43e9-b730-8ed270267c48")
+
 
         /**********PatientDB usage**********/
         // Get Patient by ID
@@ -313,6 +318,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("SLOTFAILURE", "Failure to create slots")
     }
 
+    override fun getSlotByIdSuccessListener() {
+        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii")
+    }
+
+    override fun getSlotByIdFailureListener() {
+        Log.d("FailGetSlotBYID", "Slot by Id painaiiii")
+    }
+
     override fun deleteDoctorSlotsSuccess() {
         Log.d("SLOTDEL", "Slots deleted successfully")
     }
@@ -431,6 +444,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun updatePrescriptionFailure() {
         Log.d("UpdatePrescription", "BHAI HOLO NA TO :(")
     }
+
+
 
 
 }

@@ -3,7 +3,9 @@ package com.example.retrofittest.databasing
 import android.content.Context
 import android.util.Log
 import androidx.preference.PreferenceManager
+import com.example.retrofittest.models.Doctor
 import com.example.retrofittest.models.Slot
+import com.example.retrofittest.models.SlotInfo
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -19,6 +21,9 @@ class SlotDB(val context: Context) {
 
     lateinit var mGetSlotByIDSuccessListener: getSlotByIdSuccessListener
     lateinit var mGetSlotByIDFailureListener: getSlotByIdFailureListener
+
+    lateinit var mViewAllSlotsByDoctorSuccessListener: viewAllSlotsByDoctorSuccessListener
+    lateinit var mViewAllSlotsByDoctorFailureListener: viewAllSlotsByDoctorFailureListener
 
     lateinit var mDeleteDoctorSlotsFailureListener: deleteDoctorSlotsFailureListener
     lateinit var mDeleteDoctorSlotsSuccessListener: deleteDoctorSlotsSuccessListener
@@ -105,7 +110,15 @@ class SlotDB(val context: Context) {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if ( response.isSuccessful )
                 {
-                    mGetSlotByIDSuccessListener.getSlotByIdSuccessListener()
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val slotJSONObject = jsonRes.getJSONObject("slotRet")
+                    val doctorJSONObject =  slotJSONObject.getJSONObject("doctor")
+                    val slot = Slot().fromJSON(slotJSONObject)
+                    val doctor = Doctor().fromJSON(doctorJSONObject)
+                    val slotInfo = SlotInfo()
+                    slotInfo.doctor = doctor
+                    slotInfo.slot = slot
+                    mGetSlotByIDSuccessListener.getSlotByIdSuccessListener(slotInfo)
                 }
                 else
                 {
@@ -116,7 +129,32 @@ class SlotDB(val context: Context) {
 
     }
 
+    /*****View All Slots By Doctor*****/
+    fun viewAllSlotsByDoctor(doctorId: String)
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put("doctorId", doctorId)
 
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+        val call = APIObject.api.viewAllSlotsByDoctor(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                mViewAllSlotsByDoctorFailureListener.viewAllSlotsByDoctorFailureListener()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    mViewAllSlotsByDoctorSuccessListener.viewAllSlotsByDoctorSuccessListener()
+                }
+                else
+                {
+                    mViewAllSlotsByDoctorFailureListener.viewAllSlotsByDoctorFailureListener()
+                }
+            }
+        })
+    }
 
    //delete slot by ID
 
@@ -207,7 +245,7 @@ class SlotDB(val context: Context) {
 
     interface getSlotByIdSuccessListener
     {
-        fun getSlotByIdSuccessListener()
+        fun getSlotByIdSuccessListener(slotInfo: SlotInfo)
     }
 
     interface getSlotByIdFailureListener
@@ -215,6 +253,15 @@ class SlotDB(val context: Context) {
         fun getSlotByIdFailureListener()
     }
 
+    interface viewAllSlotsByDoctorSuccessListener
+    {
+        fun viewAllSlotsByDoctorSuccessListener()
+    }
+
+    interface viewAllSlotsByDoctorFailureListener
+    {
+        fun viewAllSlotsByDoctorFailureListener()
+    }
     interface deleteDoctorSlotsSuccessListener
     {
         fun deleteDoctorSlotsSuccess()
@@ -254,6 +301,16 @@ class SlotDB(val context: Context) {
     fun setGetSlotByIdFailureListener(int: getSlotByIdFailureListener)
     {
         this.mGetSlotByIDFailureListener = int
+    }
+
+    fun setViewAllSlotsByDoctorSuccessListener(int: viewAllSlotsByDoctorSuccessListener)
+    {
+        this.mViewAllSlotsByDoctorSuccessListener = int
+    }
+
+    fun setViewAllSlotsByDoctorFailureListener(int: viewAllSlotsByDoctorFailureListener)
+    {
+        this.mViewAllSlotsByDoctorFailureListener = int
     }
 
     fun setDeleteDoctorSlotsSuccessListener(int: deleteDoctorSlotsSuccessListener)

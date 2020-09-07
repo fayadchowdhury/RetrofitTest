@@ -318,8 +318,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("SLOTFAILURE", "Failure to create slots")
     }
 
-    override fun getSlotByIdSuccessListener() {
-        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii")
+    override fun getSlotByIdSuccessListener(slotInfo: SlotInfo) {
+        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slotInfo.slot} ${slotInfo.doctor}")
     }
 
     override fun getSlotByIdFailureListener() {

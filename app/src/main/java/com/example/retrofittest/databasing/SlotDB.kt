@@ -17,6 +17,9 @@ class SlotDB(val context: Context) {
     lateinit var mCreateSlotSuccessListener: createSlotSuccessListener
     lateinit var mCreateSlotFailureListener: createSlotFailureListener
 
+    lateinit var mGetSlotByIDSuccessListener: getSlotByIdSuccessListener
+    lateinit var mGetSlotByIDFailureListener: getSlotByIdFailureListener
+
     lateinit var mDeleteDoctorSlotsFailureListener: deleteDoctorSlotsFailureListener
     lateinit var mDeleteDoctorSlotsSuccessListener: deleteDoctorSlotsSuccessListener
 
@@ -83,6 +86,36 @@ class SlotDB(val context: Context) {
             })
         }
     }
+
+    /*****Get Slot By Id *****/
+    fun getSlotById(slotId: String)
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put("slotId", slotId)
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+        val call = APIObject.api.getSlotById(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                mGetSlotByIDFailureListener.getSlotByIdFailureListener()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    Log.d("Response", "$response ")
+                    mGetSlotByIDSuccessListener.getSlotByIdSuccessListener()
+                }
+                else
+                {
+                    mGetSlotByIDFailureListener.getSlotByIdFailureListener()
+                }
+            }
+        })
+
+    }
+
+    
 
    //delete slot by ID
 
@@ -172,6 +205,16 @@ class SlotDB(val context: Context) {
         fun createSlotFailure()
     }
 
+    interface getSlotByIdSuccessListener
+    {
+        fun getSlotByIdSuccessListener()
+    }
+
+    interface getSlotByIdFailureListener
+    {
+        fun getSlotByIdFailureListener()
+    }
+
     interface deleteDoctorSlotsSuccessListener
     {
         fun deleteDoctorSlotsSuccess()
@@ -201,6 +244,16 @@ class SlotDB(val context: Context) {
     fun setCreateSlotFailureListener(int: createSlotFailureListener)
     {
         this.mCreateSlotFailureListener = int
+    }
+
+    fun setGetSlotByIdSuccessListener(int: getSlotByIdSuccessListener)
+    {
+        this.mGetSlotByIDSuccessListener = int
+    }
+
+    fun setGetSlotByIdFailureListener(int: getSlotByIdFailureListener)
+    {
+        this.mGetSlotByIDFailureListener = int
     }
 
     fun setDeleteDoctorSlotsSuccessListener(int: deleteDoctorSlotsSuccessListener)

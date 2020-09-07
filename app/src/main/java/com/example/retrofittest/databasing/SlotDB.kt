@@ -89,10 +89,9 @@ class SlotDB(val context: Context) {
     fun deleteSlotById(slotId: String)
     {
         val sh = PreferenceManager.getDefaultSharedPreferences(context)
-       // val jwt = sh.getString("jwt", "NONE FOUND").toString()
-        val jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBcHBPaW50bWVudCIsInN1YiI6IjI4ZWJkOTYyLTgwZDUtNDY3Yy1iMDkyLTQzMWEyOGViNjQ5MyIsImlhdCI6MTU5OTQ2Njg2OTI2NH0.d9pdQ77wDIEbECEiluMxpXUK9WP5fD2mtsjqopLY2Pg"
-        //val uid = sh.getString("uid", "NONE FOUND").toString()
-        if ( jwt == "NONE FOUND"  )
+        val jwt = sh.getString("jwt", "NONE FOUND").toString()
+        val uid = sh.getString("uid", "NONE FOUND").toString()
+        if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
         {
             //don't go any further
             Log.d("DELETEAPI", "$jwt ")
@@ -102,7 +101,6 @@ class SlotDB(val context: Context) {
             Log.d("DELETEAPI", "$jwt ")
             val paramsJSON = JSONObject()
             paramsJSON.put("slotId", slotId)
-            Log.d("Paramsjson", "$paramsJSON ")
             val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
 
             val headerJwt = "Bearer $jwt"

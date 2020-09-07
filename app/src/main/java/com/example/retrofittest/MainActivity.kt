@@ -46,8 +46,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.ViewUpcomingAppointmentsDoctorSuccessListener,
     AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener,
     AppointmentDB.UpdatePrescriptionSuccessListener,
-    AppointmentDB.UpdatePrescriptionFailureListener
-{
+    AppointmentDB.UpdatePrescriptionFailureListener, SlotDB.getSlotByIdSuccessListener,
+    SlotDB.getSlotByIdFailureListener, SlotDB.viewAllSlotsByDoctorSuccessListener,
+    SlotDB.viewAllSlotsByDoctorFailureListener {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -145,9 +146,18 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 //        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
       //  sdb.deleteSlotsByDoctorId()
 
+        sdb.setGetSlotByIdSuccessListener(this)
+        sdb.setGetSlotByIdFailureListener(this)
+        sdb.getSlotById("7c723ac8-f23f-4bfd-944b-5282c477a016")
+
+        sdb.setViewAllSlotsByDoctorSuccessListener(this)
+        sdb.setViewAllSlotsByDoctorFailureListener(this)
+        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
+
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
         sdb.deleteSlotById("de836858-7cd8-4074-92b1-ca3ceca6aa54")
+
 
         /**********PatientDB usage**********/
         // Get Patient by ID
@@ -205,11 +215,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
  //       appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
 
          //Update Prescription
-          appdb.setUpdatePrescriptionSuccessListener(this)
-          appdb.setUpdatePrescriptionFailureListener(this)
+        //appdb.setUpdatePrescriptionSuccessListener(this)
+       //   appdb.setUpdatePrescriptionFailureListener(this)
 
-          val updMapPres = mutableMapOf<String, String>()
-          updMapPres.put("prescription", "Kokila ben")
+        //val updMapPres = mutableMapOf<String, String>()
+        //  updMapPres.put("prescription", "Kokila ben")
          // appdb.updatePrescription(updMapPres)
 
     }
@@ -311,6 +321,22 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
     override fun createSlotFailure() {
         Log.d("SLOTFAILURE", "Failure to create slots")
+    }
+
+    override fun getSlotByIdSuccessListener(slot: Slot) {
+        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slot}")
+    }
+
+    override fun getSlotByIdFailureListener() {
+        Log.d("FailGetSlotBYID", "Slot by Id painaiiii")
+    }
+
+    override fun viewAllSlotsByDoctorSuccessListener(slotsArray: ArrayList<Slot>) {
+        Log.d("ViewAllSLOTSBYDOCTOR", "$slotsArray")
+    }
+
+    override fun viewAllSlotsByDoctorFailureListener() {
+        Log.d("VIEWALLSLOTSBYDOCTOR", "Nooooooooo slots by Doctorrrrr")
     }
 
     override fun deleteDoctorSlotsSuccess() {
@@ -431,6 +457,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun updatePrescriptionFailure() {
         Log.d("UpdatePrescription", "BHAI HOLO NA TO :(")
     }
+
+
 
 
 }

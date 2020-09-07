@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         adb.setLoginDoctorFailureListener(this)
 
       //adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
-       //adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
+//       adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
        // adb.loginPatient("ks@gmail.com","kabir1234")
 
 
@@ -142,12 +142,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         sdb.setDeleteDoctorSlotsSuccessListener(this)
         sdb.setDeleteDoctorSlotsFailureListener(this)
 
-      //  sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
+//        sdb.createSlot("2020-09-24", "10:00", "15:00", 10, 0)
       //  sdb.deleteSlotsByDoctorId()
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
-        sdb.deleteSlotById("7601d4d2-9a18-43e9-b730-8ed270267c48")
+        sdb.deleteSlotById("de836858-7cd8-4074-92b1-ca3ceca6aa54")
 
         /**********PatientDB usage**********/
         // Get Patient by ID
@@ -161,14 +161,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         pdb.setUpdatePatientProfileSuccessListener(this)
         pdb.setUpdatePatientProfileFailureListener(this)
         //Test
-        val updMap = mutableMapOf<String, String>()
-        updMap.put("name", "Kokila ben")
-        updMap.put("email", "kokilaben@rocketmail.com")
-        updMap.put("phone", "+8801769696969")
-        //updMap.put("dob", "")
-        updMap.put("gender", "female")
-        updMap.put("blood", "O-")
-        updMap.put("address", "cooker")
+//        val updMap = mutableMapOf<String, String>()
+//        updMap.put("name", "Kokila ben")
+//        updMap.put("email", "kokilaben@rocketmail.com")
+//        updMap.put("phone", "+8801769696969")
+//        updMap.put("dob", "")
+//        updMap.put("gender", "female")
+//        updMap.put("blood", "O-")
+//        updMap.put("address", "cooker")
         //pdb.updatePatientProfile(updMap)
 
         //Delete Patient by Id
@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
 
         /*******AppointmentDB********/
- //       appdb = AppointmentDB(this)
+        appdb = AppointmentDB(this)
  //       //Same structure for Viewing patient and doctor past appointments
  //       appdb.setViewPastAppointmentsPatientSuccessListener(this)
  //       appdb.setViewPastAppointmentsPatientFailureListener(this)

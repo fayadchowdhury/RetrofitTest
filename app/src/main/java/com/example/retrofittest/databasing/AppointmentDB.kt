@@ -39,6 +39,10 @@ class AppointmentDB(val context: Context) {
     lateinit var mViewPastAppointmentsDoctorSuccessListener: ViewPastAppointmentsDoctorSuccessListener
     lateinit var mViewPastAppointmentsDoctorFailureListener: ViewPastAppointmentsDoctorFailureListener
 
+    //Delete Appointment By Id interfaces
+    lateinit var mDeleteAppointmentByIdSuccessListener: DeleteAppointmentByIdSuccessListener
+    lateinit var mDeleteAppointmentByIdFailureListener: DeleteAppointmentByIdFailureListener
+
     //Update Prescription for doctors interfaces
     lateinit var mUpdatePrescriptionSuccessListener: UpdatePrescriptionSuccessListener
     lateinit var mUpdatePrescriptionFailureListener: UpdatePrescriptionFailureListener
@@ -247,6 +251,48 @@ class AppointmentDB(val context: Context) {
         }
     }
 
+    //Delete Appointment By Id
+    fun deleteAppointmentById(appointmentId: String){
+        val sh = PreferenceManager.getDefaultSharedPreferences(context)
+        val jwt = sh.getString("jwt", "NONE FOUND").toString()
+        val uid = sh.getString("uid", "NONE FOUND").toString()
+
+        if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
+        {
+            //don't go any further
+            mDeleteAppointmentByIdFailureListener.deleteAppointmentByIdFailure()
+        }
+        else
+        {
+            val paramsJSON = JSONObject()
+            paramsJSON.put("appointmentId", appointmentId)
+
+            val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+            val headerJwt = "Bearer $jwt"
+            val call = APIObject.api.deleteAppointmentById(headerJwt, params)
+
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
+                    mDeleteAppointmentByIdFailureListener.deleteAppointmentByIdFailure()
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        mDeleteAppointmentByIdSuccessListener.deleteAppointmentByIdSuccess()
+                    } else {
+                        mViewPastAppointmentsPatientFailureListener.viewPastAppointmentsPatientFailure()
+                    }
+                }
+            })
+        }
+    }
+
+
     //An utility function to return a list of appointments on the basis of jsonArray
     fun makeAppointmentArrayListFromJsonArray(jsonArray: JSONArray): ArrayList<Appointment> {
         val appointments = ArrayList<Appointment>()
@@ -358,8 +404,22 @@ class AppointmentDB(val context: Context) {
         fun viewPastAppointmentsDoctorSuccess(appointments: ArrayList<Appointment>)
     }
 
+
+
+    //Delete Appointment By Id
     interface ViewPastAppointmentsDoctorFailureListener{
         fun viewPastAppointmentsDoctorFailure()
+    }
+
+    interface DeleteAppointmentByIdSuccessListener
+    {
+        fun deleteAppointmentByIdSuccess()
+    }
+
+
+    interface DeleteAppointmentByIdFailureListener
+    {
+        fun deleteAppointmentByIdFailure()
     }
 
     //Update Prescription
@@ -406,6 +466,19 @@ class AppointmentDB(val context: Context) {
     }
     fun setViewPastAppointmentsDoctorFailureListener(int: ViewPastAppointmentsDoctorFailureListener){
         this.mViewPastAppointmentsDoctorFailureListener = int
+    }
+
+
+
+    //Set Delete Appointment By Id interface
+    fun setDeleteAppointmentByIdSuccessListener(int: DeleteAppointmentByIdSuccessListener)
+    {
+        this.mDeleteAppointmentByIdSuccessListener = int
+    }
+
+    fun setDeleteAppointmentByIdFailureListener(int: DeleteAppointmentByIdFailureListener)
+    {
+        this.mDeleteAppointmentByIdFailureListener = int
     }
 
     //Update Prescription

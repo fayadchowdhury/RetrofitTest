@@ -9,21 +9,35 @@ import com.example.retrofittest.models.*
 
 
 class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener, DoctorDB.GetDoctorByIdFailureListener,
+    /* AppDB interfaces */
+    AuthDB.RegisterDoctorBasicSuccessListener,
+    AuthDB.RegisterDoctorBasicFailureListener,
+    AuthDB.RegisterPatientBasicSuccessListener,
+    AuthDB.RegisterPatientBasicFailureListener,
+    AuthDB.LoginDoctorSuccessListener,
+    AuthDB.LoginDoctorFailureListener,
+    AuthDB.LoginPatientSuccessListener,
+    AuthDB.LoginPatientFailureListener,
+    /* DoctorDB interfaces */
     DoctorDB.GetDoctorsSuccessListener,
     DoctorDB.GetDoctorsFailureListener,
     DoctorDB.GetTopDoctorsSuccessListener,
     DoctorDB.GetTopDoctorsFailureListener,
-    AuthDB.RegisterDoctorBasicSuccessListener, AuthDB.RegisterDoctorBasicFailureListener, AuthDB.RegisterPatientBasicSuccessListener, AuthDB.RegisterPatientBasicFailureListener, AuthDB.LoginDoctorSuccessListener, AuthDB.LoginDoctorFailureListener, AuthDB.LoginPatientSuccessListener, AuthDB.LoginPatientFailureListener,
     DoctorDB.UpdateDoctorProfileSuccessListener,
     DoctorDB.UpdateDoctorProfileFailureListener,
     DoctorDB.DeleteDoctorProfileSuccessListener,
     DoctorDB.DeleteDoctorProfileFailureListener,
+    /* SlotDB interfaces */
     SlotDB.createSlotSuccessListener,
     SlotDB.createSlotFailureListener,
     SlotDB.deleteDoctorSlotsSuccessListener,
     SlotDB.deleteDoctorSlotsFailureListener,
     SlotDB.deleteSlotByIdSuccessListener,
     SlotDB.deleteSlotByIdFailureListener,
+    SlotDB.getSlotByIdSuccessListener,
+    SlotDB.getSlotByIdFailureListener,
+    SlotDB.viewAllSlotsByDoctorSuccessListener,
+    SlotDB.viewAllSlotsByDoctorFailureListener,
     /* PatientDB interfaces */
     PatientDB.GetPatientByIdSuccessListener,
     PatientDB.GetPatientByIdFailureListener,
@@ -37,6 +51,10 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     RatingDB.UpdateRatingSuccessListener,
     RatingDB.UpdateRatingFailureListener,
     /* AppointmentDB interfaces */
+    AppointmentDB.CreateAppointmentSuccessListener,
+    AppointmentDB.CreateAppointmentFailureListener,
+    AppointmentDB.ViewAppointmentByIdSuccessListener,
+    AppointmentDB.ViewAppointmentByIdFailureListener,
     AppointmentDB.ViewPastAppointmentsPatientSuccessListener,
     AppointmentDB.ViewPastAppointmentsPatientFailureListener,
     AppointmentDB.ViewPastAppointmentsDoctorSuccessListener,
@@ -46,9 +64,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.ViewUpcomingAppointmentsDoctorSuccessListener,
     AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener,
     AppointmentDB.UpdatePrescriptionSuccessListener,
-    AppointmentDB.UpdatePrescriptionFailureListener, SlotDB.getSlotByIdSuccessListener,
-    SlotDB.getSlotByIdFailureListener, SlotDB.viewAllSlotsByDoctorSuccessListener,
-    SlotDB.viewAllSlotsByDoctorFailureListener {
+    AppointmentDB.UpdatePrescriptionFailureListener {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -76,8 +92,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         adb.setLoginDoctorFailureListener(this)
 
       //adb.registerDoctorBasic("Dr. Zayada Chowdhury", "zayada.chowdhury@gmail.com", "zipto123", "768324")
-//       adb.loginDoctor("zayada.chowdhury@gmail.com", "zipto123")
-       // adb.loginPatient("ks@gmail.com","kabir1234")
+//       adb.loginDoctor("adoc@email.com", "adoc123")
+//        adb.loginPatient("ks@gmail.com","kabir1234")
 
 
         /*******DoctorDB********/
@@ -152,7 +168,7 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         sdb.setViewAllSlotsByDoctorSuccessListener(this)
         sdb.setViewAllSlotsByDoctorFailureListener(this)
-        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
+//        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
@@ -203,24 +219,32 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
 
         /*******AppointmentDB********/
         appdb = AppointmentDB(this)
- //       //Same structure for Viewing patient and doctor past appointments
- //       appdb.setViewPastAppointmentsPatientSuccessListener(this)
- //       appdb.setViewPastAppointmentsPatientFailureListener(this)
+        //Same structure for Viewing patient and doctor past appointments
+        appdb.setViewPastAppointmentsPatientSuccessListener(this)
+        appdb.setViewPastAppointmentsPatientFailureListener(this)
  //       val updMap3 = mutableMapOf<String,String>()
  //       updMap3["patientId"] = "2af1a743-4411-4311-80fc-64bef5373bea"
- //       appdb.viewPastAppointmentsPatient(updMap3)
- //       //Same structure for Viewing patient and doctor upcoming appointments
- //       appdb.setViewUpcomingAppointmentsDoctorSuccessListener(this)
- //       appdb.setViewUpcomingAppointmentsDoctorFailureListener(this)
- //       appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
+//        appdb.viewPastAppointmentsPatient(updMap3)
+        //Same structure for Viewing patient and doctor upcoming appointments
+        appdb.setViewUpcomingAppointmentsDoctorSuccessListener(this)
+        appdb.setViewUpcomingAppointmentsDoctorFailureListener(this)
+ //       appdb.viewUpcomingA28ebd962-80d5-467c-b092-431a28eb6493ppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
 
          //Update Prescription
-        //appdb.setUpdatePrescriptionSuccessListener(this)
-       //   appdb.setUpdatePrescriptionFailureListener(this)
+        appdb.setUpdatePrescriptionSuccessListener(this)
+        appdb.setUpdatePrescriptionFailureListener(this)
 
         //val updMapPres = mutableMapOf<String, String>()
         //  updMapPres.put("prescription", "Kokila ben")
-         // appdb.updatePrescription(updMapPres)
+          appdb.updatePrescription("209c2645-7dce-4dd2-bae1-0bff51859aa1", "KokilaBen")
+
+        appdb.setCreateAppointmentSuccessListener(this)
+        appdb.setCreateAppointmentFailureListener(this)
+        appdb.setViewAppointmentByIdSuccessListener(this)
+        appdb.setViewAppointmentByIdFailureListener(this)
+
+//        appdb.createAppointment("c35432e3-51d7-46d2-9fa2-0fa5a1a98d7b")
+//        appdb.viewAppointmentById("209c2645-7dce-4dd2-bae1-0bff51859aa1")
 
     }
 
@@ -458,7 +482,21 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("UpdatePrescription", "BHAI HOLO NA TO :(")
     }
 
+    override fun viewAppointmentByIdSuccess(app: Appointment) {
+        Log.d("AppWithinMain", "App data slot doctor name= ${app.slot.doctor.name}")
+    }
 
+    override fun viewAppointmentByIdFailure() {
+        Log.d("AppWithinMain", "Failed")
+    }
+
+    override fun createAppointmentSuccess(app: Appointment) {
+        Log.d("AppWithinMain", "App data slot id = ${app.id}")
+    }
+
+    override fun createAppointmentFailure() {
+        Log.d("AppWithinMain", "Failed")
+    }
 
 
 }

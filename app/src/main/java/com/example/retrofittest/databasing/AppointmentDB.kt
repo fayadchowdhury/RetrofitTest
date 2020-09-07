@@ -1,6 +1,7 @@
 package com.example.retrofittest.databasing
 
 import android.content.Context
+import android.util.Log
 import androidx.preference.PreferenceManager
 import com.example.retrofittest.MainActivity
 import com.example.retrofittest.models.Appointment
@@ -13,6 +14,15 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AppointmentDB(val context: Context) {
+
+    //View appointment interfaces
+    lateinit var mViewAppointmentByIdSuccessListener: ViewAppointmentByIdSuccessListener
+    lateinit var mViewAppointmentByIdFailureListener: ViewAppointmentByIdFailureListener
+
+    //Create appointment interfaces
+    lateinit var mCreateAppointmentSuccessListener: CreateAppointmentSuccessListener
+    lateinit var mCreateAppointmentFailureListener: CreateAppointmentFailureListener
+
     //Upcoming appointment for patients interfaces
     lateinit var mViewUpcomingAppointmentsPatientSuccessListener: ViewUpcomingAppointmentsPatientSuccessListener
     lateinit var mViewUpcomingAppointmentsPatientFailureListener: ViewUpcomingAppointmentsPatientFailureListener
@@ -33,6 +43,74 @@ class AppointmentDB(val context: Context) {
     lateinit var mUpdatePrescriptionSuccessListener: UpdatePrescriptionSuccessListener
     lateinit var mUpdatePrescriptionFailureListener: UpdatePrescriptionFailureListener
 
+
+    fun createAppointment(slotId: String)
+    {
+        val sh = PreferenceManager.getDefaultSharedPreferences(context)
+        val jwt = sh.getString("jwt", "NONE FOUND").toString()
+        val uid = sh.getString("uid", "NONE FOUND").toString()
+        if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
+        {
+            //don't go any further
+            Log.d("CREATESAPP", "$jwt $uid")
+            mCreateAppointmentFailureListener.createAppointmentFailure()
+        }
+        else
+        {
+            val paramsJSON = JSONObject()
+            paramsJSON.put("patientId", uid)
+            paramsJSON.put("slotId", slotId)
+
+            val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+            val headerJwt = "Bearer $jwt"
+
+            val call = APIObject.api.createAppointment(headerJwt, params)
+
+            call.enqueue(object: Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    mCreateAppointmentFailureListener.createAppointmentFailure()
+                }
+
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if ( response.isSuccessful )
+                    {
+                        val jsonRes = JSONObject(response.body()!!.string())
+                        val appRet = Appointment().fromJSON(jsonRes.getJSONObject("appRet"))
+                        mCreateAppointmentSuccessListener.createAppointmentSuccess(appRet)
+                    }
+                    else
+                        mCreateAppointmentFailureListener.createAppointmentFailure()
+                }
+            })
+        }
+    }
+
+    fun viewAppointmentById(appId: String)
+    {
+        val paramsJSON = JSONObject()
+        paramsJSON.put("appId", appId)
+        val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+        val call = APIObject.api.viewAppointmentById(params)
+
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                mViewAppointmentByIdFailureListener.viewAppointmentByIdFailure()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if ( response.isSuccessful )
+                {
+                    val jsonRes = JSONObject(response.body()!!.string())
+                    val appRet = Appointment().fromJSON(jsonRes.getJSONObject("appRet"))
+                    mViewAppointmentByIdSuccessListener.viewAppointmentByIdSuccess(appRet)
+                }
+                else
+                    mViewAppointmentByIdFailureListener.viewAppointmentByIdFailure()
+            }
+        })
+    }
 
     fun viewUpcomingAppointmentsPatient(patientId : String){
         val paramsJSON = JSONObject()
@@ -181,7 +259,7 @@ class AppointmentDB(val context: Context) {
 
     //Update Prescription
 
-    fun updatePrescription(updOpts: Map<String, String>)
+    fun updatePrescription(appId: String, prescription: String)
     {
         val sh = PreferenceManager.getDefaultSharedPreferences(context)
         val jwt = sh.getString("jwt", "NONE FOUND").toString()
@@ -195,10 +273,8 @@ class AppointmentDB(val context: Context) {
         {
             val paramsJSON = JSONObject()
             paramsJSON.put("id", uid)
-
-            //manually check the updOpts map; could possibly be done with an existing converter but I cannot be bothered at this point
-            if ( updOpts.containsKey("prescription") )
-                paramsJSON.put("prescription", updOpts["prescription"].toString())
+            paramsJSON.put("appId", appId)
+            paramsJSON.put("prescription", prescription)
 
             val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
 
@@ -229,6 +305,28 @@ class AppointmentDB(val context: Context) {
 
 
     /***Interfaces***/
+    //view appointment interfaces
+    interface ViewAppointmentByIdSuccessListener
+    {
+        fun viewAppointmentByIdSuccess(app: Appointment)
+    }
+
+    interface ViewAppointmentByIdFailureListener
+    {
+        fun viewAppointmentByIdFailure()
+    }
+
+    //create appointment interfaces
+    interface CreateAppointmentSuccessListener
+    {
+        fun createAppointmentSuccess(app: Appointment)
+    }
+
+    interface CreateAppointmentFailureListener
+    {
+        fun createAppointmentFailure()
+    }
+
     //Upcoming Appointments for patient
     interface ViewUpcomingAppointmentsPatientSuccessListener{
         fun viewUpcomingAppointmentsPatientSuccess(appointments: ArrayList<Appointment>)
@@ -319,5 +417,23 @@ class AppointmentDB(val context: Context) {
     fun setUpdatePrescriptionFailureListener(int: MainActivity)
     {
         this.mUpdatePrescriptionFailureListener = int
+    }
+
+    fun setCreateAppointmentSuccessListener(int: CreateAppointmentSuccessListener)
+    {
+        this.mCreateAppointmentSuccessListener = int
+    }
+    fun setCreateAppointmentFailureListener(int: CreateAppointmentFailureListener)
+    {
+        this.mCreateAppointmentFailureListener = int
+    }
+
+    fun setViewAppointmentByIdSuccessListener(int: ViewAppointmentByIdSuccessListener)
+    {
+        this.mViewAppointmentByIdSuccessListener = int
+    }
+    fun setViewAppointmentByIdFailureListener(int: ViewAppointmentByIdFailureListener)
+    {
+        this.mViewAppointmentByIdFailureListener = int
     }
 }

@@ -205,11 +205,11 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
  //       appdb.viewUpcomingAppointmentsDoctor("c27e6999-cdd6-4569-9b89-6118b78d2db4")
 
          //Update Prescription
-          appdb.setUpdatePrescriptionSuccessListener(this)
-          appdb.setUpdatePrescriptionFailureListener(this)
+        //appdb.setUpdatePrescriptionSuccessListener(this)
+       //   appdb.setUpdatePrescriptionFailureListener(this)
 
-          val updMapPres = mutableMapOf<String, String>()
-          updMapPres.put("prescription", "Kokila ben")
+        //val updMapPres = mutableMapOf<String, String>()
+        //  updMapPres.put("prescription", "Kokila ben")
          // appdb.updatePrescription(updMapPres)
 
     }

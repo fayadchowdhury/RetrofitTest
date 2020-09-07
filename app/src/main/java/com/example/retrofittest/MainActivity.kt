@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.ViewUpcomingAppointmentsDoctorFailureListener,
     AppointmentDB.UpdatePrescriptionSuccessListener,
     AppointmentDB.UpdatePrescriptionFailureListener, SlotDB.getSlotByIdSuccessListener,
-    SlotDB.getSlotByIdFailureListener {
+    SlotDB.getSlotByIdFailureListener, SlotDB.viewAllSlotsByDoctorSuccessListener,
+    SlotDB.viewAllSlotsByDoctorFailureListener {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -148,6 +149,10 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         sdb.setGetSlotByIdSuccessListener(this)
         sdb.setGetSlotByIdFailureListener(this)
         sdb.getSlotById("7c723ac8-f23f-4bfd-944b-5282c477a016")
+
+        sdb.setViewAllSlotsByDoctorSuccessListener(this)
+        sdb.setViewAllSlotsByDoctorFailureListener(this)
+        sdb.viewAllSlotsByDoctor("28ebd962-80d5-467c-b092-431a28eb6493")
 
         sdb.setDeleteSlotByIdSuccessListener(this)
         sdb.setDeleteSlotByIdFailureListener(this)
@@ -318,12 +323,20 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("SLOTFAILURE", "Failure to create slots")
     }
 
-    override fun getSlotByIdSuccessListener(slotInfo: SlotInfo) {
-        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slotInfo.slot} ${slotInfo.doctor}")
+    override fun getSlotByIdSuccessListener(slot: Slot) {
+        Log.d("SuccessGetSlotBYID", "Slot by Id paisiiiiii. ${slot}")
     }
 
     override fun getSlotByIdFailureListener() {
         Log.d("FailGetSlotBYID", "Slot by Id painaiiii")
+    }
+
+    override fun viewAllSlotsByDoctorSuccessListener(slotsArray: ArrayList<Slot>) {
+        Log.d("ViewAllSLOTSBYDOCTOR", "$slotsArray")
+    }
+
+    override fun viewAllSlotsByDoctorFailureListener() {
+        Log.d("VIEWALLSLOTSBYDOCTOR", "Nooooooooo slots by Doctorrrrr")
     }
 
     override fun deleteDoctorSlotsSuccess() {

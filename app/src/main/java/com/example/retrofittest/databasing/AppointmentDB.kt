@@ -39,6 +39,10 @@ class AppointmentDB(val context: Context) {
     lateinit var mViewPastAppointmentsDoctorSuccessListener: ViewPastAppointmentsDoctorSuccessListener
     lateinit var mViewPastAppointmentsDoctorFailureListener: ViewPastAppointmentsDoctorFailureListener
 
+    //Complete Appointment Interfaces
+    lateinit var mCompleteAppointmentSuccessListener: CompleteAppointmentSuccessListener
+    lateinit var mCompleteAppointmentFailureListener: CompleteAppointmentFailureListener
+
     //Delete Appointment By Id interfaces
     lateinit var mDeleteAppointmentByIdSuccessListener: DeleteAppointmentByIdSuccessListener
     lateinit var mDeleteAppointmentByIdFailureListener: DeleteAppointmentByIdFailureListener
@@ -251,6 +255,47 @@ class AppointmentDB(val context: Context) {
         }
     }
 
+    //Complete Appointment
+    fun completeAppointment(appointmentId: String){
+        val sh = PreferenceManager.getDefaultSharedPreferences(context)
+        val jwt = sh.getString("jwt", "NONE FOUND").toString()
+        val uid = sh.getString("uid", "NONE FOUND").toString()
+
+        if ( jwt == "NONE FOUND" || uid == "NONE FOUND" )
+        {
+            //don't go any further
+            mCompleteAppointmentFailureListener.completeAppointmentFailure()
+        }
+        else
+        {
+            val paramsJSON = JSONObject()
+            paramsJSON.put("appointmentId", appointmentId)
+
+            val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
+
+            val headerJwt = "Bearer $jwt"
+            val call = APIObject.api.completeAppointment(headerJwt, params)
+
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
+                    mCompleteAppointmentFailureListener.completeAppointmentFailure()
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        mCompleteAppointmentSuccessListener.completeAppointmentSuccess()
+                    } else {
+                        mCompleteAppointmentFailureListener.completeAppointmentFailure()
+                    }
+                }
+            })
+        }
+    }
+
     //Delete Appointment By Id
     fun deleteAppointmentById(appointmentId: String){
         val sh = PreferenceManager.getDefaultSharedPreferences(context)
@@ -404,7 +449,16 @@ class AppointmentDB(val context: Context) {
         fun viewPastAppointmentsDoctorSuccess(appointments: ArrayList<Appointment>)
     }
 
+    //Complete Appointment
+    interface CompleteAppointmentSuccessListener
+    {
+        fun completeAppointmentSuccess()
+    }
 
+    interface CompleteAppointmentFailureListener
+    {
+        fun completeAppointmentFailure()
+    }
 
     //Delete Appointment By Id
     interface ViewPastAppointmentsDoctorFailureListener{
@@ -468,7 +522,16 @@ class AppointmentDB(val context: Context) {
         this.mViewPastAppointmentsDoctorFailureListener = int
     }
 
+    //Set Complete Appointment Interface
+    fun setCompleteAppointmentSuccessListener(int: CompleteAppointmentSuccessListener)
+    {
+        this.mCompleteAppointmentSuccessListener = int
+    }
 
+    fun setCompleteAppointmentFailureListener(int: CompleteAppointmentFailureListener)
+    {
+        this.mCompleteAppointmentFailureListener = int
+    }
 
     //Set Delete Appointment By Id interface
     fun setDeleteAppointmentByIdSuccessListener(int: DeleteAppointmentByIdSuccessListener)

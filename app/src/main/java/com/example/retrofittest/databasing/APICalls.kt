@@ -30,7 +30,6 @@ interface APICalls {
 
 
     //patient routes
-
     @POST("patient/findById")
     fun getPatientById(@Body params: RequestBody): Call<ResponseBody>
 
@@ -40,8 +39,8 @@ interface APICalls {
     @POST("patient/deleteById")
     fun deletePatientById(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
-    //slot routes
 
+    //slot routes
     @POST("slot/create")
     fun createSlot(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
@@ -59,13 +58,11 @@ interface APICalls {
 
 
     //appointment routes
-
     @POST("appointment/createAppointment")
     fun createAppointment(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
     @POST("appointment/viewAppointment")
     fun  viewAppointmentById(@Body params: RequestBody): Call<ResponseBody>
-
 
     @POST("appointment/viewPastAppointmentsPatient")
     fun viewPastAppointmentsPatient(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
@@ -88,16 +85,16 @@ interface APICalls {
     @POST("appointment/updatePrescription")
     fun updatePrescription(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
-    //rating routes
 
+    //rating routes
     @POST("rating/getById")
     fun getRatingsById(@Body params: RequestBody): Call<ResponseBody>
 
     @POST("rating/updateById")
     fun editRatingsById(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
+    
     //auth routes
-
     @POST("auth/signup/doctor")
     fun registerDoctorBasic(@Body params: RequestBody): Call<ResponseBody>
 

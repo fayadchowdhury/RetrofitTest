@@ -269,7 +269,7 @@ class AppointmentDB(val context: Context) {
         else
         {
             val paramsJSON = JSONObject()
-            paramsJSON.put("appointmentId", appointmentId)
+            paramsJSON.put("appId", appointmentId)
 
             val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
 
@@ -278,7 +278,6 @@ class AppointmentDB(val context: Context) {
 
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
                     mCompleteAppointmentFailureListener.completeAppointmentFailure()
                 }
 
@@ -310,7 +309,7 @@ class AppointmentDB(val context: Context) {
         else
         {
             val paramsJSON = JSONObject()
-            paramsJSON.put("appointmentId", appointmentId)
+            paramsJSON.put("appId", appointmentId)
 
             val params = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), paramsJSON.toString())
 
@@ -319,7 +318,6 @@ class AppointmentDB(val context: Context) {
 
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
                     mDeleteAppointmentByIdFailureListener.deleteAppointmentByIdFailure()
                 }
 
@@ -330,7 +328,7 @@ class AppointmentDB(val context: Context) {
                     if (response.isSuccessful) {
                         mDeleteAppointmentByIdSuccessListener.deleteAppointmentByIdSuccess()
                     } else {
-                        mViewPastAppointmentsPatientFailureListener.viewPastAppointmentsPatientFailure()
+                        mDeleteAppointmentByIdFailureListener.deleteAppointmentByIdFailure()
                     }
                 }
             })

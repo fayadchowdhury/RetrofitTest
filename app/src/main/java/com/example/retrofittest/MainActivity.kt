@@ -66,7 +66,9 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     AppointmentDB.UpdatePrescriptionSuccessListener,
     AppointmentDB.UpdatePrescriptionFailureListener,
     AppointmentDB.DeleteAppointmentByIdSuccessListener,
-    AppointmentDB.DeleteAppointmentByIdFailureListener {
+    AppointmentDB.DeleteAppointmentByIdFailureListener,
+    AppointmentDB.CompleteAppointmentSuccessListener,
+    AppointmentDB.CompleteAppointmentFailureListener {
 
     lateinit var ddb: DoctorDB
     lateinit var adb: AuthDB
@@ -244,6 +246,12 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         appdb.setCreateAppointmentFailureListener(this)
         appdb.setViewAppointmentByIdSuccessListener(this)
         appdb.setViewAppointmentByIdFailureListener(this)
+
+
+        //Complete Appointment
+        appdb.setCompleteAppointmentSuccessListener(this)
+        appdb.setCompleteAppointmentFailureListener(this)
+        appdb.completeAppointment("")
 
         //Delete Appointment By Id
         appdb.setDeleteAppointmentByIdSuccessListener(this)
@@ -505,6 +513,14 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
         Log.d("AppWithinMain", "Failed")
     }
 
+    override fun completeAppointmentSuccess() {
+        Log.d("AppointmentCOMPLETION", "Success")
+    }
+
+    override fun completeAppointmentFailure() {
+        Log.d("AppointmentCOMPLETION", "Failure")
+    }
+
     override fun deleteAppointmentByIdSuccess() {
         Log.d("AppointmentDELETION", "Success")
     }
@@ -512,6 +528,8 @@ class MainActivity : AppCompatActivity() , DoctorDB.GetDoctorByIdSuccessListener
     override fun deleteAppointmentByIdFailure() {
         Log.d("AppointmentDELETION", "Success")
     }
+
+
 
 
 }

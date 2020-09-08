@@ -93,7 +93,7 @@ interface APICalls {
     @POST("rating/updateById")
     fun editRatingsById(@Header("Authorization") jwt: String, @Body params: RequestBody): Call<ResponseBody>
 
-    
+
     //auth routes
     @POST("auth/signup/doctor")
     fun registerDoctorBasic(@Body params: RequestBody): Call<ResponseBody>
